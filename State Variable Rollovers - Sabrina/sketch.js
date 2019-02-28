@@ -43,12 +43,10 @@ function fillQuad(){
   }
 }
 
-function draw() {
+function makeQuad(){
 
-  background(255);
-  determineQuad();
+  //Make Quadrant I
 
-  //Fill Quadrant I
   if (quad === 1){
     colourI = 0;
   }
@@ -56,9 +54,11 @@ function draw() {
     colourI += 5;
   }
   colourI = constrain(colourI, 0, 255);
-  fillQuad();
+  fill(colourI);
+  rect(width/2, 0, width/2, height/2);
 
-  //Fill quadrant II
+  //Make Quadrant II
+
   if (quad === 2){
     hoverII = true;
     colourII = 0;
@@ -70,9 +70,9 @@ function draw() {
   colourII = constrain(colourII, 0, 255);
   fill(colourII);
   rect(0, 0, width/2, height/2);
-  
 
-  //Fill Quadrant III
+  //Make Quadrant III
+
   if (quad === 3){
     colourIII = 0;
   }
@@ -83,8 +83,8 @@ function draw() {
   fill(colourIII);
   rect(0, height/2, width/2, height/2);
 
+  //Make Quadrant IV
 
-  //Fill Quadrant IV
   if (quad === 4){
     hoverIV = true;
     colourIV = 0;
@@ -96,6 +96,21 @@ function draw() {
   colourIV = constrain(colourIV, 0, 255);
   fill(colourIV);
   rect(width/2, height/2, width/2, height/2);
+}
+
+function blackout(){
+  if (hoverII === true){
+    fill(0);
+    rect(0, 0, width, height);
+
+  }
+}
 
 
+function draw() {
+
+  background(255);
+  determineQuad();
+  makeQuad();
+  blackout();
 }
