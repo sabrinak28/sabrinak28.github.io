@@ -12,10 +12,10 @@
 //Variables-------------------
 
 let quad;
-let colourI = 255;
-let colourII = 255;
-let colourIII = 255;
-let colourIV = 255;
+let colourI = 0;
+let colourII = 0;
+let colourIII = 0;
+let colourIV = 0;
 let hoverII = false;
 let hoverIV = false;
 let party = false;
@@ -88,18 +88,18 @@ function makeQuad(){
 
   else if (hoverIV && lightSwitch > 0){
     if (lightSwitch === 1){ //If light is turned on
-      fill(255);
+      fill(0);
       rect(width/2, 0, width/2, height/2);
       rect(0, 0, width/2, height/2);
       rect(0, height/2, width/2, height/2);
+      fill(255);
       rect(width/2, height/2, width/2, height/2);
     }
     if (lightSwitch === 2){ //If light is turned off
-      fill(255);
+      fill(0);
       rect(width/2, 0, width/2, height/2);
       rect(0, 0, width/2, height/2);
       rect(0, height/2, width/2, height/2);
-      fill(0);
       rect(width/2, height/2, width/2, height/2);
     }
   }
@@ -123,9 +123,9 @@ function makeQuad(){
       colourI = [255, 74, 117];
     }
     else{
-      colourI[0] += 2;
-      colourI[1] += 2;
-      colourI[2] += 2;
+      colourI[0] -= 2;
+      colourI[1] -= 2;
+      colourI[2] -= 2;
     }
     colourI[0] = constrain(colourI[0], 0, 255);
     colourI[1] = constrain(colourI[1], 0, 255);
@@ -139,9 +139,9 @@ function makeQuad(){
       colourII = [148, 95, 255];
     }
     else{
-      colourII[0] += 2;
-      colourII[1] += 2;
-      colourII[2] += 2;
+      colourII[0] -= 2;
+      colourII[1] -= 2;
+      colourII[2] -= 2;
     }
     colourII[0] = constrain(colourII[0], 0, 255);
     colourII[1] = constrain(colourII[1], 0, 255);
@@ -155,9 +155,9 @@ function makeQuad(){
       colourIII = [69, 255, 124];
     }
     else{
-      colourIII[0] += 2;
-      colourIII[1] += 2;
-      colourIII[2] += 2;
+      colourIII[0] -= 2;
+      colourIII[1] -= 2;
+      colourIII[2] -= 2;
     }
     colourIII[0] = constrain(colourIII[0], 0, 255);
     colourIII[1] = constrain(colourIII[1], 0, 255);
@@ -171,9 +171,9 @@ function makeQuad(){
       colourIV = [61, 231, 255];
     }
     else{
-      colourIV[0] += 2;
-      colourIV[1] += 2;
-      colourIV[2] += 2;
+      colourIV[0] -= 2;
+      colourIV[1] -= 2;
+      colourIV[2] -= 2;
     }
     colourIV[0] = constrain(colourIV[0], 0, 255);
     colourIV[1] = constrain(colourIV[1], 0, 255);
