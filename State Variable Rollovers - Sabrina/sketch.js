@@ -87,19 +87,16 @@ function makeQuad(){
   //To use the light switch function:--------------
 
   else if (hoverIV && lightSwitch > 0){
+    fill(0);
+    rect(width/2, 0, width/2, height/2);
+    rect(0, 0, width/2, height/2);
+    rect(0, height/2, width/2, height/2);
     if (lightSwitch === 1){ //If light is turned on
-      fill(0);
-      rect(width/2, 0, width/2, height/2);
-      rect(0, 0, width/2, height/2);
-      rect(0, height/2, width/2, height/2);
       fill(255);
       rect(width/2, height/2, width/2, height/2);
     }
     if (lightSwitch === 2){ //If light is turned off
       fill(0);
-      rect(width/2, 0, width/2, height/2);
-      rect(0, 0, width/2, height/2);
-      rect(0, height/2, width/2, height/2);
       rect(width/2, height/2, width/2, height/2);
     }
   }
