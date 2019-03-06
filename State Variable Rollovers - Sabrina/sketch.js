@@ -38,36 +38,29 @@ function setup() {
 
 function determineQuad(){
 
-  //Quadrant I---------------------------------------------------------------------
-
-  if (mouseX > width/2 && mouseX < width && mouseY > 0 && mouseY < height/2){
-    quad = 1;
-    hoverII = false;
-    hoverIV = false;
+  if (mouseX > width/2 && mouseX < width){ //Quadrant I
+    if (mouseY > 0 && mouseY < height/2){
+      quad = 1;
+      hoverII = false;
+      hoverIV = false;
+    }
+    else{ //Quadrant IV
+      quad = 4;
+      hoverII = false;
+      hoverIV = true;
+    }
   }
-
-  //Quadrant II--------------------------------------------------------------------
-
-  if (mouseX > 0 && mouseX < width/2 && mouseY > 0 && mouseY < height/2){
-    quad = 2;
-    hoverII = true;
-    hoverIV = false;
-  }
-
-  //Quadrant III--------------------------------------------------------------------
-
-  if (mouseX > 0 && mouseX < width/2 && mouseY > height/2 && mouseY < height){
-    quad = 3;
-    hoverII = false;
-    hoverIV = false;
-  }
-
-  //Quadrant IV---------------------------------------------------------------------
-
-  if (mouseX > width/2 && mouseX < width && mouseY > height/2 && mouseY < height){
-    quad = 4;
-    hoverII = false;
-    hoverIV = true;
+  if (mouseX > 0 && mouseX < width/2){ //Quadrant III
+    if (mouseY > height/2 && mouseY < height){
+      quad = 3;
+      hoverII = false;
+      hoverIV = false;
+    }
+    else{ //Quadrant II
+      quad = 2;
+      hoverII = true;
+      hoverIV = false;
+    }
   }
 }
 
@@ -87,10 +80,7 @@ function makeQuad(){
   //To use the light switch function:--------------
 
   else if (hoverIV && lightSwitch > 0){
-    fill(0);
-    rect(width/2, 0, width/2, height/2);
-    rect(0, 0, width/2, height/2);
-    rect(0, height/2, width/2, height/2);
+    background(0);
     if (lightSwitch === 1){ //If light is turned on
       fill(255);
       rect(width/2, height/2, width/2, height/2);
