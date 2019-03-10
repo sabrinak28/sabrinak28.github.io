@@ -95,6 +95,7 @@ function makeColours(){
 //Function to change the size of the squares:-------------
 
 function mousePressed(){
+  
   if (mouseButton === RIGHT){ //To grow squares
     if (0 < sizeSelection){ //Restriction
       sizeSelection -= 1;
@@ -102,7 +103,7 @@ function mousePressed(){
     }
   }
   else if (mouseButton === LEFT){ //To shrink squares
-    if (squareSizes.length > sizeSelection){ //Restriction
+    if (squareSizes[0] > sizeSelection){ //Restriction
       sizeSelection += 1;
       count = true;
     }
