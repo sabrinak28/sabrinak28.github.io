@@ -25,7 +25,7 @@ let grayscale = false;
 //Setup--------------------
 
 function setup() {
-  createCanvas(1900, 950);
+  createCanvas(1400, 700);
   noStroke();
 }
 
