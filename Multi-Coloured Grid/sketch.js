@@ -167,15 +167,12 @@ function draw() {
     commonDenominator(); //Gather data
 
     if (start){ //If this is the first time... start at a number of squares fairly between the greatest and smallest number of them.
-
       if (squareSizes.length % 2 === 0){ //If the amount of perfect divisible squares is even:
         sizeSelection = squareSizes.length / 2;
       }
-
       else{ //If the amount of perfect divisible squares is odd:
         sizeSelection = (squareSizes.length + 1) / 2;
       }
-
     }
 
     squareSize = squareSizes[sizeSelection];
