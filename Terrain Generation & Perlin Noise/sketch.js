@@ -6,6 +6,7 @@
 // - describe what you did to take this project "above and beyond"
 
 let rectSize = 5;
+let xoff = -500;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -17,9 +18,11 @@ function draw() {
 }
 
 function generateTerrain(){
-  for (let x = 0; x < width; x += rectSize){
+  for (let c = 0; c < width; c += rectSize){
     //rect(x, height, rectSize, random(-20, -500));
-    rect(x, height, rectSize, noise(-500));
+    let x = map(noise(xoff), 0 , 1, 0, width);
+    xoff -= 0.001;
+    rect(c, height, rectSize, noise(xoff));
   }
 }
 
