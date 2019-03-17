@@ -41,19 +41,17 @@ function generateTerrain(){
   let xOff = start;
   let highestX = 0;
   let highest = height;
-  let lowest = 0;
+  let total = 0;
 
   for(let x = 0; x < width; x += tWidth){ //Loop
 
     let currentHeight = noise(xOff)*height;
+
+    total += currentHeight; //Gather info for average
     
     if (currentHeight < highest){
       highest = currentHeight; //Create new highest
       highestX = x;
-    }
-
-    if (currentHeight > lowest){
-      lowest = currentHeight; //Create new lowest
     }
 
     //Create the rectangle
@@ -64,8 +62,8 @@ function generateTerrain(){
   }
   //Finally, implement the pan, flag, and average
   drawFlag(highestX, highest);
-  findAverage(highest, lowest);
-  start += 0.01;
+  findAverage(total);
+  start += 0.02;
 
 }
 //------------------------------------------------------
@@ -83,8 +81,8 @@ function drawFlag(xValue, yValue){
 //----------------------------------------------------------------------------------------------
 
 //To find the average:---------------
-function findAverage(high, low){
-  let average = (high + low) / 2;
+function findAverage(total){
+  let average = total / width;
   stroke(100);
   strokeWeight(5);
   rect(0, average, width, average);
