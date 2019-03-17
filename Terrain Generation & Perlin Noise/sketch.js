@@ -1,68 +1,99 @@
-// Project Title
-// Your Name
-// Date
+// Terrain Generation and Perlin Noise
+// Sabrina Kettle
+// March 16th, 2019
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - A red line will constantly be set at a y-value to represent the average between the highest and lowest peak.
+// - A cute little flag will be set on the current highest peak of the terrain.
+// - Personal addition: I just really wanted nice aesthetics and for it to look like the terrain is a silhouette against a sunset.
+//   I hope you don't mind that I implememnted a gradient feature (with of course the help of the P5.js reference).
 
-// let rectSize = 5;
-// let xoff = -500;
-
-// function setup() {
-//   createCanvas(windowWidth, windowHeight);
-//   fill(100);
-//   generateTerrain();
-// }
-
-// function draw() {
-// }
-
-// function generateTerrain(){
-//   for (let c = 0; c < width; c += rectSize){
-//     //rect(x, height, rectSize, random(-20, -500));
-//     let x = map(noise(xoff), 0 , 1, 0, width);
-//     xoff -= 0.001;
-//     rect(c, height, rectSize, noise(xoff));
-//   }
-// }
-
-// function keyPressed(){
-//   if (key === " "){
-//     background(255);
-//     generateTerrain();
-//   }
-// }
-
+//Variables:------
 let tWidth = 1;
 let start = 0;
+let c1, c2;
+//----------------
 
+//Setup:------------------------------------
 function setup(){
   createCanvas(windowWidth, windowHeight);
   rectMode(CORNERS);
+  c1 = color(247, 187, 151); //233, 100, 51
+  c2 = color(221, 94, 137);  //144, 78, 159
 }
+//------------------------------------------
 
+//Just a personal addition: Gradient Background:---
+function createSunset(x, y, w, h, c1, c2){
+  for (let i = y; i <= y + h; i++) {
+    let inter = map(i, y, y + h, 0, 1);
+    let c = lerpColor(c1, c2, inter);
+    stroke(c);
+    line(x, i, x + w, i);
+  }
+}
+//--------------------------------------------------
+
+//Generating the panning terrain:----------------------
 function generateTerrain(){
-  let highest = height;
-  let highestX = 0;
-  //Do all the work to draw the terrain
+
+  //Variables
   let xOff = start;
-  for(let x = 0; x < width; x += tWidth){
+  let highestX = 0;
+  let highest = height;
+  let lowest = 0;
+
+  for(let x = 0; x < width; x += tWidth){ //Loop
+
     let currentHeight = noise(xOff)*height;
+    
     if (currentHeight < highest){
-      highestX = currentHeight;
-      print(currentHeight);
+      highest = currentHeight; //Create new highest
+      highestX = x;
     }
+
+    if (currentHeight > lowest){
+      lowest = currentHeight; //Create new lowest
+    }
+
+    //Create the rectangle
+    stroke(0);
+    strokeWeight(1);
     rect(x, currentHeight, x + tWidth, height);
     xOff += 0.004;
   }
+  //Finally, implement the pan, flag, and average
+  drawFlag(highestX, highest);
+  findAverage(highest, lowest);
   start += 0.01;
-}
-
-function drawFlag(){
 
 }
+//------------------------------------------------------
 
+//To draw the flag at the highest peak:---------------------------------------------------------
+function drawFlag(xValue, yValue){
+  stroke(0);
+  fill(0);
+  rect(xValue - 1, yValue + 5, xValue + 5, yValue - 53); //Pole
+  stroke(193, 60, 131);
+  fill(193, 81, 141);
+  strokeWeight(5);
+  triangle(xValue + 7, yValue - 30, xValue + 7, yValue - 50, xValue + 30, yValue - 40); //Flag
+}
+//----------------------------------------------------------------------------------------------
+
+//To find the average:---------------
+function findAverage(high, low){
+  let average = (high + low) / 2;
+  stroke(100);
+  strokeWeight(5);
+  rect(0, average, width, average);
+}
+//-----------------------------------
+
+//At last, to play through it all:--------------------------------
 function draw(){
-  background(220);
+  createSunset(0, 0, width, height, c1, c2); //Create background
   generateTerrain();
 }
+//----------------------------------------------------------------
