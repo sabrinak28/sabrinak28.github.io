@@ -6,7 +6,7 @@
 // - A red line will constantly be set at a y-value to represent the average between the highest and lowest peak.
 // - A cute little flag will be set on the current highest peak of the terrain.
 // - Personal addition: I just really wanted nice aesthetics and for it to look like the terrain is a silhouette against a sunset.
-//   I hope you don't mind that I implememnted a gradient feature (with of course the help of the P5.js reference).
+//   I hope you don't mind that I implemented a gradient feature (with of course the help of the P5.js reference).
 
 //Variables:------
 let tWidth = 1;
