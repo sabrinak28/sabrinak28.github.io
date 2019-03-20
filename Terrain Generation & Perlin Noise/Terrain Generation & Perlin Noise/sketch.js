@@ -9,21 +9,26 @@
 //   I hope you don't mind that I implemented a gradient feature (with of course the help of the P5.js reference).
 
 //Variables:------
+
 let tWidth = 1;
 let start = 0;
 let c1, c2;
+
 //----------------
 
-//Setup:------------------------------------
+//Setup:---------------------------------------
+
 function setup(){
   createCanvas(windowWidth, windowHeight);
   rectMode(CORNERS);
   c1 = color(247, 187, 151); //233, 100, 51
   c2 = color(221, 94, 137);  //144, 78, 159
 }
-//------------------------------------------
+
+//---------------------------------------------
 
 //Just a personal addition: Gradient Background:---
+
 function createSunset(x, y, w, h, c1, c2){
   for (let i = y; i <= y + h; i++) {
     let inter = map(i, y, y + h, 0, 1);
@@ -32,9 +37,11 @@ function createSunset(x, y, w, h, c1, c2){
     line(x, i, x + w, i);
   }
 }
+
 //--------------------------------------------------
 
-//Generating the panning terrain:----------------------
+//Generating the panning terrain:-------------------------
+
 function generateTerrain(){
 
   //Variables
@@ -43,7 +50,8 @@ function generateTerrain(){
   let highest = height;
   let total = 0;
 
-  for(let x = 0; x < width; x += tWidth){ //Loop
+  //Loop
+  for(let x = 0; x < width; x += tWidth){
 
     let currentHeight = noise(xOff)*height;
 
@@ -66,9 +74,11 @@ function generateTerrain(){
   start += 0.02;
 
 }
-//------------------------------------------------------
 
-//To draw the flag at the highest peak:---------------------------------------------------------
+//---------------------------------------------------------
+
+//To draw the flag at the highest peak:-----------------------------------------------------------
+
 function drawFlag(xValue, yValue){
   stroke(0);
   fill(0);
@@ -78,20 +88,25 @@ function drawFlag(xValue, yValue){
   strokeWeight(5);
   triangle(xValue + 7, yValue - 30, xValue + 7, yValue - 50, xValue + 30, yValue - 40); //Flag
 }
-//----------------------------------------------------------------------------------------------
 
-//To find the average:---------------
+//------------------------------------------------------------------------------------------------
+
+//To find the average:------------------
+
 function findAverage(total){
   let average = total / width;
   stroke(100);
   strokeWeight(5);
   rect(0, average, width, average);
 }
-//-----------------------------------
 
-//At last, to play through it all:--------------------------------
+//--------------------------------------
+
+//At last, to play through it all:-----------------------------------
+
 function draw(){
   createSunset(0, 0, width, height, c1, c2); //Create background
   generateTerrain();
 }
-//----------------------------------------------------------------
+
+//-------------------------------------------------------------------
