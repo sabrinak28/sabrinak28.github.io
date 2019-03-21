@@ -11,12 +11,12 @@
 //Variables----------------
 
 let sRed, sBlue, sGreen;
-let count = true;
+let count = true; //*
 let scheme = 0;
-let squareSize;
-let squareSizes = [];
-let start = true;
-let sizeSelection;
+let squareSize; //*
+let squareSizes = []; //*
+let start = true; 
+let sizeSelection; //*
 let grayscale = false;
 
 //-------------------------
@@ -163,6 +163,7 @@ function commonDenominator(){
 // At last, to play through it all:--------------------------------------------------------------------------------------------------
 
 function draw() {
+  print(squareSizes);
   if (count){
     commonDenominator(); //Gather data
 
