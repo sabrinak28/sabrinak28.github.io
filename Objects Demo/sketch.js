@@ -21,19 +21,22 @@ class Walker{
   constructor(x_, y_){
     this.x = x_;
     this.y = y_;
-    this.speed = random(10, 20);
-    this.size = random(20, 50);
+    this.speed = 10;
+    this.size = random(20, 60);
 
-    this.c = color(int(random(255)), int(random(200, 255)), int(random(200, 255)));
+    //this.c = color(int(random(100, 125)), int(random(100)), int(random(200, 255)));
+    //this.c = color(random(255), random(255), random(255));
+    this.c = color(random(55, 255), random(55, 255), random(55, 155));
+
     this.xOff = random(200);
     this.yOff = random(200);
   }
 
   //Class Methods
   display(){
-    rectMode(CENTER);
+    ellipseMode(CENTER);
     fill(this.c);
-    rect(this.x, this.y, this.size, this.size);
+    ellipse(this.x, this.y, this.size, this.size);
   }
 
   move(){
