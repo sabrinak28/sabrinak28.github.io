@@ -24,9 +24,9 @@ class Walker{
     this.speed = 10;
     this.size = random(20, 60);
 
-    //this.c = color(int(random(100, 125)), int(random(100)), int(random(200, 255)));
+    this.c = color(int(random(100, 125)), int(random(100)), int(random(200, 255)));
     //this.c = color(random(255), random(255), random(255));
-    this.c = color(random(55, 255), random(55, 255), random(55, 155));
+    //this.c = color(random(55, 255), random(55, 255), random(55, 155));
 
     this.xOff = random(200);
     this.yOff = random(200);
