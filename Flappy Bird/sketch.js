@@ -11,6 +11,7 @@ let pipeImg = [];
 let stripeImg = [];
 
 let bird;
+let pipes = [];
 
 
 function preload(){
@@ -68,16 +69,42 @@ class Bird{
 
 class Pipes {
 
-  constructor(x_){
-    this.top = random(height/2);
-    this.bottom = random(height/2);
+  constructor(x_, w_){
+    this.top = random(height/2.5);
+    this.bottom = random(height/2.5);
     this.x = x_;
-    this.w = 20;
+    this.w = w_;
+    this.speed = 5;
 
   }
 
+  hits(bird){
+    if (bird.y < this.top || bird.y > height - this.bottom){
+      if (bird.x > this.x && bird.x < this.x + this.w){
+        return true;
+      }
+    }
+    return false;
+  }
+
   display(){
-    image(pipeImg[random(1, 5)], 0, this.w, this.bottom);
+    fill(100, 200, 100);
+    rect(this.x, 0, this.w, this.top);
+    rect(this.x, height - this.bottom, this.w, this.bottom);
+    //image(pipeImg[random(1, 5)], 0, this.w, this.bottom);
+  }
+
+  update(){
+    this.x -= this.speed;
+  }
+
+  offscreen(){
+    if (this.x < -this.w){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }
 
@@ -86,6 +113,7 @@ class Pipes {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   bird = new Bird(25, height/2);
+  pipes.push(new Pipes(width, 50));
 }
 
 function keyPressed(){
@@ -93,8 +121,29 @@ function keyPressed(){
     bird.up();
   }
 }
+
 function draw() {
   background(backgroundImg);
-  bird.update();
-  bird.display();
+
+  if (pipes[0].hits(bird) === false){
+
+    for(let i = pipes.length - 1; i >= 0; i--){
+      pipes[i].display();
+      pipes[i].update();
+  
+      if (pipes[i].offscreen()){
+        pipes.splice(i, 1);
+      }
+  
+    }
+  
+    bird.update();
+    bird.display();
+    
+    if (frameCount % 100 === 0){
+      pipes.push(new Pipes(width, 50));
+    }
+
+  }
+
 }
