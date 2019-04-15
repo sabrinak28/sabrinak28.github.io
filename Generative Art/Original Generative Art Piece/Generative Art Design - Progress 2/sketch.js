@@ -9,18 +9,17 @@
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noLoop();
-  angleMode(DEGREES);
 
 }
 
 function circleSpiral(){
   for (let c = 1; c < width; c ++){
-    ellipse(width/2, height/2, width/c);
-    let lCount = 6 * c;
+    //ellipse(width/2, height/2, width/c);
+    let lCount = 1 * c;
     for (let i = lCount; i > 0; i--){
-      push();
-      line(width/2, height/2, width/2, 0);
-      rotate(360 / lCount);
+      rotate(360 / c);
+      stroke(random(255), random(255), random(255));
+      line(width/2, height/2, c, c/ width);
     }
   }
 }
