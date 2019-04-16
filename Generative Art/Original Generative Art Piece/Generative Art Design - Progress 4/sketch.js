@@ -16,22 +16,30 @@ function setup() {
 function circleSpiral(){
   push();
   translate(width/2, height/2);
+  let stepsWay = true;
 
-  for (let c = 1; c < 5; c++){
+  for (let c = 1; c < width; c++){
 
     ellipse(0, cHeight, width / c);
 
     for (let i = 0; i < 360; i += 6){
       push();
       rotate(radians(i));
-      if (i % 12 === 0){
-        line(0, cHeight, width / c, 0);
+      if (stepsWay === true){
+        if (i % 12 === 0){
+          line(0, cHeight, width / c, 0);
+        }
+      }
+      else{
+        if (i % 8 === 0){
+          line(0, cHeight, width / c, 0);
+        }
       }
       pop();
     }
 
-
-    cHeight = cHeight + width / c;
+    stepsWay = !stepsWay;
+    cHeight = cHeight + 10000;
 
   }
 }

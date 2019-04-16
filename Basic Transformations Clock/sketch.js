@@ -14,7 +14,7 @@ function draw() {
   background(220);
   push();
   translate(width/2, height/2);
-  strokeWeight(3);
+  strokeWeight(1);
   ellipse(0, 0, 600, 600);
 
 
@@ -23,8 +23,7 @@ function draw() {
     rotate(radians(i));
     if (i % 30 === 0){
       //Thick Line
-      strokeWeight(3);
-      line(220, 0, 280, 0);
+      line(240, 0, 280, 0);
     }
     else{
       //thin Line
