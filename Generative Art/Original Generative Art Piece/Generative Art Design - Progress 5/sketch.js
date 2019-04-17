@@ -48,32 +48,6 @@ function pieceOne(){
   push();
   translate(width/2, height/2);
 
-  
-
-  for (let c = 1; c < 200; c++){
-
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        stroke(25);
-        line(0, cHeight, width / c, 0);
-      }
-      pop();
-    }
-    cHeight = cHeight + 200;
-  }
-
-  pop();
-  cHeight = 0;
-}
-
-function pieceTwo(){
-  push();
-  translate(width/2, height/2);
-
-  
-
   for (let c = 1; c < 100; c++){
 
     for (let i = 0; i < 360; i += 6){
@@ -92,8 +66,7 @@ function pieceTwo(){
   cHeight = 0;
 }
 
-
-function pieceThree(){
+function pieceTwo(){
   push();
   translate(width/2, height/2);
   for (let c = 1; c < 5; c++){
@@ -113,27 +86,7 @@ function pieceThree(){
   cHeight = 0;
 }
 
-function pieceFour(){
-  push();
-  translate(width/2, height/2);
-  for (let c = 1; c < 3; c++){
-
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        stroke(155);
-        line(0, cHeight, width / c, 0);
-      }
-      pop();
-    }
-    cHeight = cHeight + 600;
-  }
-  pop();
-  cHeight = 0;
-}
-
-function pieceFive(){
+function pieceThree(){
   push();
   translate(width/2, height/2);
 
@@ -160,6 +113,4 @@ function draw() {
   pieceOne();
   pieceTwo();
   pieceThree();
-  pieceFour();
-  pieceFive();
 }
