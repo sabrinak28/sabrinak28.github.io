@@ -56,7 +56,7 @@ function pieceOne(){
       push();
       rotate(radians(i));
       if (i % 12 === 0){
-        stroke(25);
+        stroke(50, 135, 129);
         line(0, cHeight, width / c, 0);
       }
       pop();
@@ -80,7 +80,7 @@ function pieceTwo(){
       push();
       rotate(radians(i));
       if (i % 12 === 0){
-        stroke(55);
+        stroke(75, 186, 179, 100);
         line(0, cHeight, width / c, 0);
       }
       pop();
@@ -102,7 +102,7 @@ function pieceThree(){
       push();
       rotate(radians(i));
       if (i % 12 === 0){
-        stroke(155);
+        stroke(182, 255, 251);
         line(0, cHeight, width / c, 0);
       }
       pop();
@@ -122,7 +122,7 @@ function pieceFour(){
       push();
       rotate(radians(i));
       if (i % 12 === 0){
-        stroke(155);
+        stroke(182, 255, 251);
         line(0, cHeight, width / c, 0);
       }
       pop();
@@ -155,7 +155,7 @@ function pieceFive(){
 }
 
 function draw() {
-  background(0);
+  background(22);
   //circleSpiral();
   pieceOne();
   pieceTwo();
