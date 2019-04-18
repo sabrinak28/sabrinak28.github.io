@@ -11,46 +11,17 @@ let sGreen = 81;
 let sBlue = 113;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(3000, 4500);
+  strokeWeight(5);
   noLoop();
 
-}
-
-function circleSpiral(){
-  push();
-  translate(width/2, height/2);
-
-  for (let c = 1; c < width * 2; c++){
-
-    strokeWeight(2);
-    fill(sRed, sGreen, sBlue);
-    ellipse(0, cHeight, width * 2 / c);
-
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        strokeWeight(1);
-        line(0, cHeight, height/ c * 2 - 5, 0);
-      }
-      pop();
-    }
-
-    // sRed = sRed - 3;
-    // sGreen = sGreen - 3;
-    // sBlue = sBlue - 3;
-
-  }
-  pop();
 }
 
 function pieceOne(){
   push();
   translate(width/2, height/2);
 
-  
-
-  for (let c = 1; c < 200; c++){
+  for (let c = 1; c < 2000; c++){
 
     for (let i = 0; i < 360; i += 6){
       push();
@@ -61,7 +32,7 @@ function pieceOne(){
       }
       pop();
     }
-    cHeight = cHeight + 200;
+    cHeight = cHeight + 2000;
   }
 
   pop();
@@ -74,7 +45,7 @@ function pieceTwo(){
 
   
 
-  for (let c = 1; c < 100; c++){
+  for (let c = 1; c < 1000; c++){
 
     for (let i = 0; i < 360; i += 6){
       push();
@@ -85,7 +56,7 @@ function pieceTwo(){
       }
       pop();
     }
-    cHeight = cHeight + 100;
+    cHeight = cHeight + 50;
   }
 
   pop();
@@ -94,26 +65,6 @@ function pieceTwo(){
 
 
 function pieceThree(){
-  push();
-  translate(width/2, height/2);
-  for (let c = 1; c < 5; c++){
-
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        stroke(182, 255, 251);
-        line(0, cHeight, width / c, 0);
-      }
-      pop();
-    }
-    cHeight = cHeight + 100;
-  }
-  pop();
-  cHeight = 0;
-}
-
-function pieceFour(){
   push();
   translate(width/2, height/2);
   for (let c = 1; c < 3; c++){
@@ -127,13 +78,55 @@ function pieceFour(){
       }
       pop();
     }
-    cHeight = cHeight + 600;
+    cHeight = cHeight + 1500;
+  }
+  pop();
+  cHeight = 0;
+}
+
+function pieceFour(){
+  push();
+  translate(width/2, height/2);
+  for (let c = 1; c < 4; c++){
+
+    for (let i = 0; i < 360; i += 6){
+      push();
+      rotate(radians(i));
+      if (i % 12 === 0){
+        stroke(182, 255, 251);
+        line(0, cHeight, width / c, 0);
+      }
+      pop();
+    }
+    cHeight = cHeight + 400;
   }
   pop();
   cHeight = 0;
 }
 
 function pieceFive(){
+  push();
+  translate(width/2, height/2);
+
+  for (let c = 1; c < 20; c++){
+
+    for (let i = 0; i < 360; i += 6){
+      push();
+      rotate(radians(i));
+      if (i % 12 === 0){
+        stroke(85, 196, 189);
+        line(0, cHeight, width / c, 0);
+      }
+      pop();
+    }
+    cHeight = cHeight + 80;
+  }
+  pop();
+  cHeight = 0;
+
+}
+
+function pieceSix(){
   push();
   translate(width/2, height/2);
 
@@ -148,7 +141,7 @@ function pieceFive(){
       }
       pop();
     }
-    cHeight = cHeight + 10;
+    cHeight = cHeight + 20;
   }
   pop();
 
@@ -156,10 +149,10 @@ function pieceFive(){
 
 function draw() {
   background(22);
-  //circleSpiral();
   pieceOne();
   pieceTwo();
   pieceThree();
   pieceFour();
   pieceFive();
+  pieceSix();
 }
