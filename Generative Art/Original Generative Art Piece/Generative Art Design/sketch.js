@@ -12,7 +12,7 @@ let sBlue = 113;
 
 function setup() {
   createCanvas(3000, 4500);
-  strokeWeight(5);
+  strokeWeight(3);
   noLoop();
 
 }
@@ -114,7 +114,7 @@ function pieceFive(){
       push();
       rotate(radians(i));
       if (i % 12 === 0){
-        stroke(85, 196, 189);
+        stroke(105, 216, 209);
         line(0, cHeight, width / c, 0);
       }
       pop();

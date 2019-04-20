@@ -17,7 +17,7 @@ function circleSpiral(){
   push();
   translate(width/2, height/2);
 
-  for (let c = 1; c < 10; c++){
+  for (let c = 1; c < 3; c++){
 
     for (let i = 0; i < 360; i += 6){
       push();
@@ -27,7 +27,7 @@ function circleSpiral(){
       }
       pop();
     }
-    cHeight = cHeight + 10;
+    cHeight = cHeight + 100;
   }
 }
 
