@@ -7,7 +7,7 @@
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1920, 967);
   noLoop();
 
 }
@@ -27,4 +27,12 @@ function circleSpiral(){
 function draw() {
   background(220);
   circleSpiral();
+  print(windowWidth);
+  print(windowHeight);
+}
+
+function keyPressed(){
+  if (key === " "){
+    save();
+  }
 }

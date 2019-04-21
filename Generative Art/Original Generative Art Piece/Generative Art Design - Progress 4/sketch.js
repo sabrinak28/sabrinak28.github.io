@@ -9,6 +9,7 @@ let cHeight = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  strokeWeight(5);
   noLoop();
 
 }
@@ -17,17 +18,17 @@ function circleSpiral(){
   push();
   translate(width/2, height/2);
 
-  for (let c = 1; c < 3; c++){
+  for (let c = 1; c < 100; c++){
 
     for (let i = 0; i < 360; i += 6){
       push();
       rotate(radians(i));
-      if (i % 12 === 0){
+      if (i % 60 === 0){
         line(0, cHeight, width / c, 0);
       }
       pop();
     }
-    cHeight = cHeight + 100;
+    cHeight = cHeight + 1000;
   }
 }
 
@@ -36,12 +37,8 @@ function draw() {
   circleSpiral();
 }
 
-// for (let c = 1; c < width; c ++){
-  //   ellipse(width/2, height/2, width/c);
-  //   let lCount = 6 * c;
-  //   for (let i = lCount; i > 0; i--){
-  //     push();
-  //     line(width/2, height/2, width/2, 0);
-  //     rotate(360 / lCount);
-  //   }
-  // }
+function keyPressed(){
+  if (key === " "){
+    save();
+  }
+}

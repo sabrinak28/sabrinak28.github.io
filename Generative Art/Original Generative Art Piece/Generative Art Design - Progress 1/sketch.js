@@ -30,3 +30,9 @@ function draw() {
   background(0);
   circleSpiral();
 }
+
+function keyPressed(){
+  if (key === " "){
+    save();
+  }
+}

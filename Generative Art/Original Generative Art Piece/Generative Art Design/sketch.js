@@ -1,23 +1,30 @@
-// Project Title
-// Your Name
-// Date
+// Generative Art Design
+// Sabrina Kettle
+// April 21st, 2019
 //
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - While experimenting with line qualities as I was building my piece, I developed a code that forms elaborate semingly spirograph shapes that change very drastically with 
+//   the re-assigning of two values.
+
+//Variables:-----
 
 let cHeight = 0;
-let sRed = 100;
-let sGreen = 81;
-let sBlue = 113;
+
+//---------------
+
+//Setup:------------------------------------
 
 function setup() {
-  createCanvas(3000, 4500);
+  createCanvas(3000, 4500); //Poster Size
   strokeWeight(3);
   noLoop();
-
 }
 
+//------------------------------------------
+
+//The darkest layer at the very back:-------
+
 function pieceOne(){
+
   push();
   translate(width/2, height/2);
 
@@ -35,16 +42,21 @@ function pieceOne(){
     cHeight = cHeight + 2000;
   }
 
+  //Refresh
   pop();
   cHeight = 0;
+
 }
 
+//------------------------------------------
+
+//The second darkest layer atop piece one:--
+
 function pieceTwo(){
+
   push();
   translate(width/2, height/2);
-
   
-
   for (let c = 1; c < 1000; c++){
 
     for (let i = 0; i < 360; i += 6){
@@ -59,52 +71,18 @@ function pieceTwo(){
     cHeight = cHeight + 50;
   }
 
+  //Refresh
   pop();
   cHeight = 0;
+
 }
 
+//-------------------------------------------
+
+//This piece is lighter than the last and beneath the centre:
 
 function pieceThree(){
-  push();
-  translate(width/2, height/2);
-  for (let c = 1; c < 3; c++){
 
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        stroke(182, 255, 251);
-        line(0, cHeight, width / c, 0);
-      }
-      pop();
-    }
-    cHeight = cHeight + 1500;
-  }
-  pop();
-  cHeight = 0;
-}
-
-function pieceFour(){
-  push();
-  translate(width/2, height/2);
-  for (let c = 1; c < 4; c++){
-
-    for (let i = 0; i < 360; i += 6){
-      push();
-      rotate(radians(i));
-      if (i % 12 === 0){
-        stroke(182, 255, 251);
-        line(0, cHeight, width / c, 0);
-      }
-      pop();
-    }
-    cHeight = cHeight + 400;
-  }
-  pop();
-  cHeight = 0;
-}
-
-function pieceFive(){
   push();
   translate(width/2, height/2);
 
@@ -121,12 +99,78 @@ function pieceFive(){
     }
     cHeight = cHeight + 80;
   }
+
+  //Refresh
   pop();
   cHeight = 0;
 
 }
 
+//-----------------------------------------------------------
+
+//The big light ring revolving the middle:---
+
+function pieceFour(){
+
+  push();
+  translate(width/2, height/2);
+
+  for (let c = 1; c < 4; c++){
+
+    for (let i = 0; i < 360; i += 6){
+      push();
+      rotate(radians(i));
+      if (i % 12 === 0){
+        stroke(182, 255, 251);
+        line(0, cHeight, width / c, 0);
+      }
+      pop();
+    }
+    cHeight = cHeight + 400;
+  }
+
+  //Refresh
+  pop();
+  cHeight = 0;
+
+}
+
+//---------------------------------------------
+
+//The small light ring revolving the middle:---
+
+function pieceFive(){
+
+  push();
+  translate(width/2, height/2);
+
+  for (let c = 1; c < 3; c++){
+
+    for (let i = 0; i < 360; i += 6){
+      push();
+      rotate(radians(i));
+      if (i % 12 === 0){
+        stroke(182, 255, 251);
+        line(0, cHeight, width / c, 0);
+      }
+      pop();
+    }
+    cHeight = cHeight + 1500;
+  }
+
+  //Refresh
+  pop();
+  cHeight = 0;
+
+}
+
+
+//----------------------------------------------
+
+//The final white centrepiece of the art:---
+
 function pieceSix(){
+
   push();
   translate(width/2, height/2);
 
@@ -143,12 +187,26 @@ function pieceSix(){
     }
     cHeight = cHeight + 20;
   }
+
   pop();
 
 }
 
-function draw() {
-  background(22);
+//--------------------------------------------
+
+//To save the picture:----
+
+function keyPressed(){
+  if (key === " "){
+    save();
+  }
+}
+
+//------------------------
+
+//Put all th pieces together:--
+
+function allTogether(){
   pieceOne();
   pieceTwo();
   pieceThree();
@@ -156,3 +214,14 @@ function draw() {
   pieceFive();
   pieceSix();
 }
+
+//----------------------------
+
+//And... draw!------
+
+function draw() {
+  background(22);
+  allTogether();
+}
+
+//------------------

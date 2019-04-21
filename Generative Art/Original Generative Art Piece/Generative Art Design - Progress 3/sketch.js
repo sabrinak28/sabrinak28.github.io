@@ -20,8 +20,6 @@ function circleSpiral(){
 
   for (let c = 1; c < width; c++){
 
-    ellipse(0, cHeight, width / c);
-
     for (let i = 0; i < 360; i += 6){
       push();
       rotate(radians(i));
@@ -39,7 +37,7 @@ function circleSpiral(){
     }
 
     stepsWay = !stepsWay;
-    cHeight = cHeight + 10000;
+    cHeight = cHeight + 100000;
 
   }
 }
@@ -49,12 +47,8 @@ function draw() {
   circleSpiral();
 }
 
-// for (let c = 1; c < width; c ++){
-  //   ellipse(width/2, height/2, width/c);
-  //   let lCount = 6 * c;
-  //   for (let i = lCount; i > 0; i--){
-  //     push();
-  //     line(width/2, height/2, width/2, 0);
-  //     rotate(360 / lCount);
-  //   }
-  // }
+function keyPressed(){
+  if (key === " "){
+    save();
+  }
+}
