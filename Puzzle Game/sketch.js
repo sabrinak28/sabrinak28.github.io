@@ -10,10 +10,11 @@ const NUM_COLS = 5;
 let rectWidth, rectHeight;
 let currentRow, currentCol;
 let win = false;
+
 let gridData = [[0,0,0,0,0],
-                [0,0,0,0,0],
-                [0,255,0,0,0],
-                [255,255,255,0,0]];
+[0,0,0,0,0],
+[0,255,0,0,0],
+[255,255,255,0,0]];
 
 
 
@@ -22,8 +23,24 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   rectWidth = width/NUM_COLS;
   rectHeight = height/NUM_ROWS;
+
+  //startBoard();
 }
 
+function startBoard(){
+
+  for (let y = 0; y < 5; y++){
+    for (let x = 0; x < 6; x++){
+      let bOrW = random(4);
+      if (bOrW < 2){
+        gridData[y][x] = 255;
+      }
+      else{
+        gridData[y][x] = 0;
+      }
+    }
+  }
+}
 
 function mousePressed(){
 
@@ -59,6 +76,7 @@ function determineActiveSquare(){
   // An expression to run each frame to determine where the mouse currently is.
   currentRow = int(mouseY / rectHeight);
   currentCol = int(mouseX / rectWidth);
+
 }
 
 function drawGrid(){
@@ -67,9 +85,34 @@ function drawGrid(){
     for (let y = 0; y < NUM_ROWS; y++){
       fill(gridData[y][x]); 
       rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
+
+      if (y === currentRow && x === currentCol){
+        fill(0, 255, 0, 100);
+        rect(x*rectWidth + rectWidth, y*rectHeight, rectWidth, rectHeight);
+        // rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
+        // rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
+      }
+
+      else{
+        fill(gridData[y][x]);
+        rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
+      }
     }
   }
 }
+
+// function hoverTiles(){
+//   if (col >= 0 && col < NUM_COLS ){
+//     if (row >= 0 && row < NUM_ROWS){
+//       if (gridData[row][col] === 0){
+//         gridData[row][col] = 255;
+//       }
+//       else{
+//         gridData[row][col] = 0;
+//       } 
+//     }
+//   }
+// }
 
 function determineWin(){
   let totalPoints = 0;
