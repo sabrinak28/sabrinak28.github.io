@@ -9,8 +9,8 @@ const NUM_ROWS = 4;
 const NUM_COLS = 5;
 let rectWidth, rectHeight;
 let currentRow, currentCol;
+let shapeState = true;
 let win = false;
-let hover = false;
 
 let gridData = [[0,0,0,0,0],
 [0,0,0,0,0],
@@ -24,6 +24,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   rectWidth = width/NUM_COLS;
   rectHeight = height/NUM_ROWS;
+  noStroke();
 
   startBoard();
 }
@@ -47,14 +48,28 @@ function mousePressed(){
 
   if(mouseButton === LEFT){
     // cross-shaped pattern flips on a mouseclick. Boundary conditions are checked within the flip function to ensure in-bounds access for array
-    flip(currentCol, currentRow);
-    flip(currentCol-1, currentRow);
-    flip(currentCol+1, currentRow);
-    flip(currentCol, currentRow-1);
-    flip(currentCol, currentRow+1);
+    if (shapeState){
+      flip(currentCol, currentRow);
+      flip(currentCol-1, currentRow);
+      flip(currentCol+1, currentRow);
+      flip(currentCol, currentRow-1);
+      flip(currentCol, currentRow+1);
+    }
+    else{
+      flip(currentCol, currentRow);
+      flip(currentCol+1, currentRow);
+      flip(currentCol, currentRow+1);
+      flip(currentCol + 1, currentRow+1);
+    }
   }
   else if (mouseButton === RIGHT){
     flip(currentCol, currentRow);
+  }
+}
+
+function keyPressed(){
+  if (key === " "){
+    shapeState = !shapeState;
   }
 }
 
@@ -78,12 +93,21 @@ function determineActiveSquare(){
   currentRow = int(mouseY / rectHeight);
   currentCol = int(mouseX / rectWidth);
 
-  fill(0, 255, 0, 100);
-  rect(currentCol * rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
-  rect(currentCol * rectWidth + rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
-  rect(currentCol * rectWidth - rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
-  rect(currentCol * rectWidth, currentRow * rectHeight + rectHeight, rectWidth, rectHeight);
-  rect(currentCol * rectWidth, currentRow * rectHeight - rectHeight, rectWidth, rectHeight);
+  if (shapeState){
+    fill(0, 255, 0, 100);
+    rect(currentCol * rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth + rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth - rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth, currentRow * rectHeight + rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth, currentRow * rectHeight - rectHeight, rectWidth, rectHeight);
+  }
+  else{
+    fill(0, 255, 0, 100);
+    rect(currentCol * rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth + rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth, currentRow * rectHeight + rectHeight, rectWidth, rectHeight);
+    rect(currentCol * rectWidth + rectWidth, currentRow * rectHeight + rectHeight, rectWidth, rectHeight);
+  }
 
 }
 
@@ -113,10 +137,15 @@ function determineWin(){
 }
 
 function announceWin(){
-  textSize(100);
+  background(225);
+  textSize(width/10);
   textAlign(CENTER);
-  fill(0, 255, 0);
+  fill(228, 92, 160);
+  textFont('Comic Sans MS');
   text('You win!', width/2, height/2);
+  for (let c = 100; c > 0; c--){
+    fill(random(255));
+  }
 }
 
 function draw() {
