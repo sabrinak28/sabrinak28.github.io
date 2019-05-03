@@ -10,6 +10,7 @@ const NUM_COLS = 5;
 let rectWidth, rectHeight;
 let currentRow, currentCol;
 let win = false;
+let hover = false;
 
 let gridData = [[0,0,0,0,0],
 [0,0,0,0,0],
@@ -24,15 +25,15 @@ function setup() {
   rectWidth = width/NUM_COLS;
   rectHeight = height/NUM_ROWS;
 
-  //startBoard();
+  startBoard();
 }
 
 function startBoard(){
 
-  for (let y = 0; y < 5; y++){
-    for (let x = 0; x < 6; x++){
-      let bOrW = random(4);
-      if (bOrW < 2){
+  for (let y = 0; y < NUM_ROWS; y++){
+    for (let x = 0; x < NUM_COLS; x++){
+      let bOrW = int(random(2));
+      if (bOrW === 1){
         gridData[y][x] = 255;
       }
       else{
@@ -77,42 +78,25 @@ function determineActiveSquare(){
   currentRow = int(mouseY / rectHeight);
   currentCol = int(mouseX / rectWidth);
 
+  fill(0, 255, 0, 100);
+  rect(currentCol * rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+  rect(currentCol * rectWidth + rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+  rect(currentCol * rectWidth - rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
+  rect(currentCol * rectWidth, currentRow * rectHeight + rectHeight, rectWidth, rectHeight);
+  rect(currentCol * rectWidth, currentRow * rectHeight - rectHeight, rectWidth, rectHeight);
+
 }
 
 function drawGrid(){
   // Render a grid of squares - fill color set according to data stored in the 2D array
   for (let x = 0; x < NUM_COLS ; x++){
     for (let y = 0; y < NUM_ROWS; y++){
+
       fill(gridData[y][x]); 
       rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
-
-      if (y === currentRow && x === currentCol){
-        fill(0, 255, 0, 100);
-        rect(x*rectWidth + rectWidth, y*rectHeight, rectWidth, rectHeight);
-        // rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
-        // rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
-      }
-
-      else{
-        fill(gridData[y][x]);
-        rect(x*rectWidth, y*rectHeight, rectWidth, rectHeight);
-      }
     }
   }
 }
-
-// function hoverTiles(){
-//   if (col >= 0 && col < NUM_COLS ){
-//     if (row >= 0 && row < NUM_ROWS){
-//       if (gridData[row][col] === 0){
-//         gridData[row][col] = 255;
-//       }
-//       else{
-//         gridData[row][col] = 0;
-//       } 
-//     }
-//   }
-// }
 
 function determineWin(){
   let totalPoints = 0;
@@ -137,14 +121,11 @@ function announceWin(){
 
 function draw() {
   if (win === false){
+    drawGrid();  
     determineActiveSquare();   //figure out which tile the mouse cursor is over
-    drawGrid();                //render the current game board to the screen (and the overlay)
     determineWin();
   }
   else{
     announceWin();
   }
 }
-
-
-
