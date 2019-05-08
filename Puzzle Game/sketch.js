@@ -1,21 +1,25 @@
-// Project Title
-// Your Name
-// Date
+// Puzzle Game
+// Sabrina Kettle
+// May 8th, 2019
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - Added a hovering function that will highlight the selected tiles in blue.
+// - Added a switch between shapes: when space is pressed it will switch between flipping tiles in a cross and square shape.
+// - A special and very snazzy winning screen!
 
 //Data:------------------------
 
+//Constants//
 const NUM_ROWS = 4;
 const NUM_COLS = 5;
 
+//Variables//
 let rectWidth, rectHeight;
 let currentRow, currentCol;
 let shapeState = true;
 let win = false;
 
-
+//Array//
 let gridData = [[0,0,0,0,0],
                 [0,0,0,0,0],
                 [0,0,0,0,0],
@@ -185,15 +189,15 @@ function announceWin(){
   //Fun circle border
   for (let c = 100; c > 0; c--){
     fill(random(255), random(255), random(255), 100);
-    ellipse(random(width), c, 600);
-    ellipse(random(width), height - c, 600);
+    ellipse(random(width), c, height/5);
+    ellipse(random(width), height - c, height/5);
   }
 
   //Text
   textSize(width/10);
   textAlign(CENTER);
   fill(228, 92, 160);
-  textFont('Comic Sans MS');
+  textFont('Jokerman');
   text('You win!', width/2, height/2);
 }
 
