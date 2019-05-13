@@ -21,22 +21,25 @@ function setup() {
 }
 
 function links(diameter){
-  if (diameter < 10){
+
+  if (diameter < width/100){
     rotateY(radians(angleY));
     rotateX(radians(angleX));
-    fill(rFill,gFill,bFill);
-    torus(diameter);
+    fill(255, 0, 94);
+    stroke(255, 144, 185);
+    ellipsoid(diameter);
   }
   else{
-    fill(rFill,gFill,bFill);
-    torus(diameter);
     rotateY(radians(angleY));
     rotateX(radians(angleX));
+
+    fill(diameter/20, diameter/20, diameter/5);
+    torus(diameter, diameter/15);
 
     // rFill = rFill - 5;
     // gFill = gFill - 5;
     // bFill = bFill - 5;
-    links(diameter*0.7);
+    links(diameter*0.8);
   }
 }
 
@@ -44,6 +47,6 @@ function draw() {
   rotateZ(radians(frameCount/2));
   angleX = map(mouseX, 0, width, -120, 120);
   angleY = map(mouseY, 0, height, -120, 120);
-  background(0);
-  links(700);
+  background(20);
+  links(width/3);
 }
