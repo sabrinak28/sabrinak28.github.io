@@ -20,7 +20,7 @@ function setup() {
   //second, split up that large string back into an array, using spaces and punctuation as the delimiters,
   //which yeilds and array where each element is an individual word from the source text.
   srcText = join(srcText, ' ');
-  words = splitTokens(srcText, ' .,?!()');
+  words = splitTokens(srcText, ' .,?!();"');
 
   //UI Elements. A title, text field, and button.
   greeting = createElement('h2', 'Poetry Generator');
@@ -74,6 +74,8 @@ function generateAcrostic() {
 
   let poem = "";   //poem starts as an empty string. Use loop(s) to add to this!
   let poemArray = [];
+  let punctuation = ["!", "?", "...", ",", ";"];
+  let lastWord = "";
 
   for(let i = 0; i < seedWord.length; i++){
     let letter = seedWord[i];
@@ -81,11 +83,28 @@ function generateAcrostic() {
     for(let c = 0; c < words.length; c++){
       let curWord = words[c];
       if (letter === curWord[0]){
-        poemArray.push(curWord);
-        words.splice(c, 1);
-        break;
+        if (lastWord !== curWord){
+          poemArray.push(curWord);
+          lastWord = curWord;
+          words.splice(c, 1);
+          break;
+        }
       }
-    } 
+    }
+  }
+
+  for (let i = 0; i < poemArray.length; i++){
+
+    poem = poem + " " + poemArray[i];
+
+    if (i % 3 === 0 && i !== 0 || i === poemArray.length - 1){
+      if (i === poemArray.length - 1){
+        poem = poem + punctuation[int(random(0,2))];
+      }
+      else{
+        poem = poem + punctuation[int(random(0,4))];
+      }
+    }
   }
 
   text(poem, 25, 105, 430, 360);
@@ -110,8 +129,43 @@ function generateDiastic() {
   //    Add some logic to ensure that the same word isn't chosen twice in a row and added to the poem:
   //      For instance a poem like "Evening of of antiques" should not be a possible output
 
+  let seedWord = input.value();
   
   let poem = "";   //poem starts as an empty string. Use loop(s) to add to this!
+  let poemArray = [];
+  let punctuation = ["!", "?", "...", ",", ";"];
+  let lastWord = "";
+
+  for(let i = 0; i < seedWord.length; i++){
+    let letter = seedWord[i];
+
+    for(let c = i; c < words.length; c++){
+      let curWord = words[c];
+
+      if (letter === curWord[i]){
+        if (lastWord !== curWord){
+          poemArray.push(curWord);
+          lastWord = curWord;
+          words.splice(c, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < poemArray.length; i++){
+
+    poem = poem + " " + poemArray[i];
+
+    if (i % 3 === 0 && i !== 0 || i === poemArray.length - 1){
+      if (i === poemArray.length - 1){
+        poem = poem + punctuation[int(random(0,2))];
+      }
+      else{
+        poem = poem + punctuation[int(random(0,4))];
+      }
+    }
+  }
 
   text(poem, 25, 105, 430, 360);
   print(poem);
