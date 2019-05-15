@@ -31,7 +31,7 @@ function setup() {
 
 //Function to create recursive fractals:-----------
 
-function links(diameter){
+function rings(diameter){
 
   if (diameter < width/100){ //Base Case
     //Rotate to mouse
@@ -59,6 +59,7 @@ function links(diameter){
 
     //Build
     links(diameter*0.8);
+    rings(diameter*0.8);
   }
 
 }
@@ -79,7 +80,7 @@ function draw() {
 
   //Draw:
   background(20);
-  links(width/3);
+  rings(width/3);
 
 }
 

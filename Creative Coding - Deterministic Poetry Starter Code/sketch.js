@@ -20,7 +20,7 @@ function setup() {
   //second, split up that large string back into an array, using spaces and punctuation as the delimiters,
   //which yeilds and array where each element is an individual word from the source text.
   srcText = join(srcText, ' ');
-  words = splitTokens(srcText, ' .,?!();"');
+  words = splitTokens(srcText, ' .,?!();"_');
 
   //UI Elements. A title, text field, and button.
   greeting = createElement('h2', 'Poetry Generator');
