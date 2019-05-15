@@ -58,7 +58,6 @@ function rings(diameter){
     torus(diameter, diameter/15);
 
     //Build
-    links(diameter*0.8);
     rings(diameter*0.8);
   }
 
