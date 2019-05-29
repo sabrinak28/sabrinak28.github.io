@@ -21,8 +21,11 @@ let hatch;
 let imellia;
 let ace;
 
+let menu;
 
+let turn = 1;
 let endgame = false;
+
 
 function preload(){
 
@@ -43,6 +46,10 @@ function preload(){
   for (let i = 1; i < 5; i++){
     aImg.push(loadImage("assets/Ace" + i + ".png"));
   }
+
+  for (let i = 1; i < 9; i++){
+    menus.push(loadImage("assets/menu" + i + ".jpg"));
+  }
 }
 
 class Whisper{
@@ -56,7 +63,7 @@ class Whisper{
   }
 
   display(){
-    image(wImg[0], this.x, this.y, width/15, height/5);
+    image(wImg[0], this.x, this.y);
   }
   
   attack(){
@@ -83,7 +90,7 @@ class Quill{
   }
 
   display(){
-    image(qImg[0], this.x, this.y, width/13, height/5.7);
+    image(qImg[0], this.x, this.y);
   }
   
   spell(){
@@ -110,7 +117,7 @@ class Hatch{
   }
 
   display(){
-    image(hImg[0], this.x, this.y, width/13, height/4.5);
+    image(hImg[0], this.x, this.y);
   }
   
   attack(){
@@ -137,7 +144,7 @@ class Imellia{
   }
 
   display(){
-    image(iImg[0], this.x, this.y, width/15, height/5.5);
+    image(iImg[0], this.x, this.y, 0, height/5.5);
   }
   
   spell(){
@@ -164,14 +171,14 @@ class Ace{
   }
 
   display(){
-    image(aImg[0], this.x, this.y, width/17, height/4.5);
+    image(aImg[0], this.x, this.y);
   }
   
-  spell(){
+  attack(){
 
   }
 
-  heal(){
+  shoot(){
 
   }
 
@@ -180,24 +187,43 @@ class Ace{
   }
 }
 
+class Menu{
+  constructor(x_, y_){
+    this.x = x_;
+    this.y = y_;
+  }
 
+  display(t){
+    image(menus[t], this.x, this.y);
+  }
+}
+
+function firstRound(){
+
+  whisper.display();
+  quill.display();
+  hatch.display();
+  imellia.display();
+  ace.display();
+  menu.display(0);
+
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  whisper = new Whisper(width/5, height/6.5);
-  quill = new Quill(width/25, height/3.25);
-  hatch = new Hatch(width/5, height/2.25);
-  imellia = new Imellia(width/25, height/1.7);
-  ace = new Ace(width/5, height/1.3);
+
+  whisper = new Whisper(width/7.5, height/6.5);
+  quill = new Quill(width/25, height/4);
+  hatch = new Hatch(width/7.5, height/2.7);
+  imellia = new Imellia(width/25, height/2);
+  ace = new Ace(width/7.5, height/1.6);
+
+  menu = new Menu(width/7,height/1.15);
 }
 
 function draw() {
   if (endgame === false){
     background(backgroundImg);
-    whisper.display();
-    quill.display();
-    hatch.display();
-    imellia.display();
-    ace.display();
+    firstRound();
   }
 }
