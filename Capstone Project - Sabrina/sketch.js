@@ -21,6 +21,12 @@ let hatch;
 let imellia;
 let ace;
 
+let wChoice = 0;
+let qChoice = 0;
+let hChoice = 0;
+let iChoice = 0;
+let aChoice = 0;
+
 let menu;
 
 let turn = 1;
@@ -200,12 +206,25 @@ class Menu{
 
 function firstRound(){
 
-  whisper.display();
-  quill.display();
-  hatch.display();
-  imellia.display();
-  ace.display();
-  menu.display(0);
+  if(whisper.health + quill.health + hatch.health + imellia.health + ace.health > 0){
+    if (turn === 1){
+      if (whisper.health > 0){
+        menu.display(0);
+        if (wChoice === 0){
+          if (keyPressed === 1){
+            wChoice === 1;
+          }
+          else if (keyPressed === 2){
+            wChoice === 2;
+          }
+        }
+      }
+      else{
+        whisper.dead();
+        turn === 2;
+      }
+    }
+  }
 
 }
 
@@ -219,9 +238,17 @@ function setup() {
   ace = new Ace(width/7.5, height/1.6);
 
   menu = new Menu(width/7,height/1.15);
+
+  whisper.display();
+  quill.display();
+  hatch.display();
+  imellia.display();
+  ace.display();
+  menu.display(0);
 }
 
 function draw() {
+  
   if (endgame === false){
     background(backgroundImg);
     firstRound();
