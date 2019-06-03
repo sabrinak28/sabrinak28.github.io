@@ -31,6 +31,9 @@ let bChoice = 0;
 
 let menu;
 
+let startAttack;
+let attacking = false;
+
 let turn = 1;
 let endgame = false;
 
@@ -93,13 +96,31 @@ class Whisper{
     ace.display();
   
     boss.display();
-    if (this.x < width/2.2){
+    if (this.x < width/2.6){
       this.x += 4;
     }
-    if (this.y < height/2){
-      this.y += 2;
+    if (this.y < height/1.8){
+      this.y += 4;
     }
-    image(wImg[1], this.x, this.y);
+    whisper.display();
+
+    if (frameCount - startAttack > 120){
+      image(wImg[1], this.x, this.y);
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+
+  dealDamage(){
+    if (wChoice === 1){
+      return this.aDamage;
+    }
+    else{
+      return this.sDamage;
+    }
   }
 
   shoot(){
@@ -307,6 +328,19 @@ class Boss{
         image(bImg[3], this.x, this.y);
       }
     }
+  }
+
+  getDamaged(hp){
+    if (this.alive){
+      this.health = this.health - hp;
+    }
+  }
+
+  status(){
+    if (this.health < 1){
+      this.alive = false;
+    }
+    return this.health;
   }
 
 }
@@ -588,8 +622,18 @@ function secondRound(){
 
   if (wChoice > 0){
     if (wChoice === 1){
-      whisper.attack();
+      if (attacking === false){
+        attacking = true;
+        startAttack = frameCount;
+      }
+      
+      if (whisper.attack()){
+        boss.getDamaged(100);
+        wChoice = 0;
+        print(boss.status());
+      } 
     }
+
     else{
       whisper.shoot();
     }
