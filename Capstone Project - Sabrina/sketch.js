@@ -75,6 +75,7 @@ class Whisper{
     this.aDamage = 100;
     this.health = 200;
     this.alive = true;
+    this.attackPhase = 1;
   }
 
   display(){
@@ -96,20 +97,41 @@ class Whisper{
     ace.display();
   
     boss.display();
-    if (this.x < width/2.6){
-      this.x += 4;
-    }
-    if (this.y < height/1.8){
-      this.y += 4;
-    }
-    whisper.display();
+    if (this.attackPhase === 1){
+      if (this.x < width/2.6){
+        this.x += 4;
+      }
+      if (this.y < height/1.8){
+        this.y += 4;
+      }
+      whisper.display();
 
-    if (frameCount - startAttack > 120){
-      image(wImg[1], this.x, this.y);
-      return true;
-    }
-    else{
+      if (frameCount - startAttack > 120){
+        this.attackPhase = 2;
+      }
       return false;
+    }
+    if (this.attackPhase === 2){
+      image(wImg[1], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.aDamage, width/2, height/2);
+      if (frameCount - startAttack > 240){
+        this.attackPhase = 3;
+      }
+      return false;
+    }
+    if (this.attackPhase === 3){
+      if (this.x > width/7.5){
+        this.x -= 4;
+      }
+      if (this.y > height/6.5){
+        this.y -= 4;
+      }
+      whisper.display();
+
+      if (frameCount - startAttack > 360){
+        return true;
+      }
     }
 
   }
