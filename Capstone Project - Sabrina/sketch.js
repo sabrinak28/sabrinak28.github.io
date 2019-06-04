@@ -6,6 +6,7 @@
 // - describe what you did to take this project "above and beyond"
 
 let backgroundImg;
+let kImg;
 
 let wImg = [];
 let qImg = [];
@@ -30,6 +31,7 @@ let aChoice = 0;
 let bChoice = 0;
 
 let menu;
+let knife;
 
 let startAttack;
 let attacking = false;
@@ -41,6 +43,7 @@ let endgame = false;
 function preload(){
 
   backgroundImg = loadImage("assets/bg.jpg");
+  kImg = loadImage("assets/knife.png");
 
   for (let i = 1; i < 5; i++){
     wImg.push(loadImage("assets/Whisper" + i + ".png"));
@@ -79,7 +82,6 @@ class Whisper{
   }
 
   display(){
-
     if (this.health > 0){
       image(wImg[0], this.x, this.y);
     }
@@ -130,10 +132,40 @@ class Whisper{
       whisper.display();
 
       if (frameCount - startAttack > 360){
+        this.attackPhase = 1;
         return true;
       }
     }
+  }
 
+  shoot(){
+    background(backgroundImg);
+  
+    quill.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+  
+    boss.display();
+    if (this.attackPhase === 1){
+      
+      image(wImg[2], this.x, this.y);
+      knife.throw();
+      
+      if (frameCount - startAttack > 100){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(wImg[2], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.sDamage, width/2, height/2);
+    }
+    if (frameCount - startAttack > 140){
+      this.attackPhase = 1;
+      return true;
+    }
   }
 
   dealDamage(){
@@ -145,11 +177,6 @@ class Whisper{
     }
   }
 
-  shoot(){
-    image(wImg[2], this.x, this.y);
-  }
-
-
   getDamaged(hp){
     if (this.alive){
       this.health = this.health - hp;
@@ -159,11 +186,10 @@ class Whisper{
   getHealed(hp){
     if (this.alive){
       this.health = this.health + hp;
+      if (this.health > 200){
+        this.health = 200;
+      }
     }
-  }
-
-  getGuarded(){
-
   }
 
   status(){
@@ -186,7 +212,45 @@ class Quill{
   }
 
   display(){
-    image(qImg[0], this.x, this.y);
+    if (this.health > 0){
+      image(qImg[0], this.x, this.y);
+    }
+    else{
+      image(qImg[3], this.x, this.y);
+    }
+  }
+
+  spell(){
+    background(backgroundImg);
+  
+    whisper.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+  
+    boss.display();
+    if (this.attackPhase === 1){
+      
+      image(qImg[1], this.x, this.y);
+
+      if (frameCount - startAttack > 100){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(qImg[1], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.sDamage, width/2, height/2);
+    }
+    if (frameCount - startAttack > 140){
+      this.attackPhase = 1;
+      return true;
+    }
+  }
+
+  dealDamage(){
+    return this.sDamage;
   }
 
   getDamaged(hp){
@@ -196,12 +260,12 @@ class Quill{
   getHealed(hp){
     if (this.alive){
       this.health = this.health + hp;
+      if (this.health > 175){
+        this.health = 175;
+      }
     }
   }
 
-  getGuarded(){
-
-  }
 
   status(){
     if (this.health < 1){
@@ -365,6 +429,23 @@ class Boss{
     return this.health;
   }
 
+}
+
+class Knife{
+  constructor(x_, y_){
+    this.x = x_;
+    this.y = y_;
+    this.speed = 7;
+  }
+  throw(){
+    if (this.x < width/2){
+      this.x += this.speed;
+      if (this.y < height/2){
+        this.y += this.speed / 2;
+      }
+      image(kImg, this.x, this.y);
+    }
+  }
 }
 
 class Menu{
@@ -640,24 +721,61 @@ function secondRound(){
 
   boss.display();
 
-  menu.display(8);
-
-  if (wChoice > 0){
-    if (wChoice === 1){
-      if (attacking === false){
-        attacking = true;
-        startAttack = frameCount;
+  if (turn === 9){
+    if (wChoice > 0){
+      if (wChoice === 1){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        
+        if (whisper.attack()){
+          boss.getDamaged(whisper.dealDamage());
+          wChoice = 0;
+          print(boss.status());
+          turn++;
+        } 
       }
-      
-      if (whisper.attack()){
-        boss.getDamaged(100);
-        wChoice = 0;
-        print(boss.status());
-      } 
+      else{
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        if (whisper.shoot()){
+          boss.getDamaged(whisper.dealDamage());
+          wChoice = 0;
+          print(boss.status());
+          turn++;
+        } 
+      }
     }
-
-    else{
-      whisper.shoot();
+  }
+  if (turn === 10){
+    if (qChoice > 0){
+      if (qChoice === 1){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        
+        if (quill.spell()){
+          boss.getDamaged(quill.dealDamage());
+          qChoice = 0;
+          print(boss.status());
+          turn++;
+        } 
+      }
+      else{
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        if (quill.heal()){
+          // boss.getDamaged(quill.dealDamage());
+          // wChoice = 0;
+          // print(boss.status());
+        } 
+      }
     }
   }
 }
@@ -673,6 +791,8 @@ function setup() {
   imellia = new Imellia(width/25, height/2);
   ace = new Ace(width/7.5, height/1.6);
 
+  knife = new Knife(width/7.5, height/6.5);
+
   boss = new Boss(width/2, height/2);
 
   menu = new Menu(width/7,height/1.15);
@@ -681,10 +801,9 @@ function setup() {
 
 function draw() {
 
-
   if (endgame === false){
 
-    if (turn === 9){
+    if (turn > 8){
       secondRound();
     }
     else{
