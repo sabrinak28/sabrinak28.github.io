@@ -123,7 +123,7 @@ class Whisper{
       return false;
     }
     if (this.attackPhase === 3){
-      if (this.x > width/7.5){
+      if (this.x > width/5){
         this.x -= 4;
       }
       if (this.y > height/6.5){
@@ -268,19 +268,19 @@ class Quill{
       image(qImg[2], this.x, this.y);
       fill(0, 255, 255);
       if (qChoice === 3){
-        text("+" + this.sHeal, width/7.5, height/6.5);
+        text("+" + this.sHeal, width/5, height/6.5);
       }
       if (qChoice === 4){
         text("+" + this.sHeal, width/25, height/4);
       }
       if (qChoice === 5){
-        text("+" + this.sHeal, width/7.5, height/2.7);
+        text("+" + this.sHeal, width/5, height/2.7);
       }
       if (qChoice === 6){
         text("+" + this.sHeal, width/25, height/2);
       }
       if (qChoice === 7){
-        text("+" + this.sHeal, width/7.5, height/1.6);
+        text("+" + this.sHeal, width/5, height/1.6);
       }
     }
     if (frameCount - startAttack > 160){
@@ -326,7 +326,7 @@ class Hatch{
     this.y = y_;
     this.x = x_;
     this.aDamage = 50;
-    this.defend = 75;
+    this.aDefend = 75;
     this.health = 300;
     this.alive = true;
     this.attackPhase = 1;
@@ -374,7 +374,7 @@ class Hatch{
       return false;
     }
     if (this.attackPhase === 3){
-      if (this.x > width/7.5){
+      if (this.x > width/5){
         this.x -= 4;
       }
       if (this.y > height/2.7){
@@ -383,6 +383,49 @@ class Hatch{
       hatch.display();
 
       if (frameCount - startAttack > 360){
+        this.attackPhase = 1;
+        return true;
+      }
+    }
+  }
+
+  defend(){
+    background(backgroundImg);
+  
+    whisper.display();
+    quill.display();
+    imellia.display();
+    ace.display();
+    boss.display();
+    
+    if (this.attackPhase === 1){
+      if (hChoice === 3){
+        if (this.x < width/4){
+          this.x += 4;
+        }
+        if (this.y > height/6.5){
+          this.y -= 4;
+        }
+      }
+      if (hChoice === 4){
+        if (this.x > width/10){
+          this.x -= 4;
+        }
+        if (this.y > height/4){
+          this.y -= 4;
+        }
+      }
+  
+      hatch.display();
+
+      if (frameCount - startAttack > 120){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(hImg[2], this.x, this.y);
+      if (frameCount - startAttack > 240){
         this.attackPhase = 1;
         return true;
       }
@@ -921,24 +964,31 @@ function secondRound(){
         } 
       }
       else{
-        //fill later
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        if (hatch.defend()){
+          hChoice = 0;
+          turn++;
+          attacking = false;
+        } 
       }
     }
   }
+  
 }
-
-
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  whisper = new Whisper(width/7.5, height/6.5);
+  whisper = new Whisper(width/5, height/6.5);
   quill = new Quill(width/25, height/4);
-  hatch = new Hatch(width/7.5, height/2.7);
+  hatch = new Hatch(width/5, height/2.7);
   imellia = new Imellia(width/25, height/2);
-  ace = new Ace(width/7.5, height/1.6);
+  ace = new Ace(width/5, height/1.6);
 
-  knife = new Knife(width/7.5, height/6.5);
+  knife = new Knife(width/5, height/6.5);
 
   boss = new Boss(width/2, height/2);
 
