@@ -209,6 +209,7 @@ class Quill{
     this.heal = 100;
     this.health = 175;
     this.alive = true;
+    this.attackPhase = 1;
   }
 
   display(){
@@ -230,10 +231,8 @@ class Quill{
   
     boss.display();
     if (this.attackPhase === 1){
-      
       image(qImg[1], this.x, this.y);
-
-      if (frameCount - startAttack > 100){
+      if (frameCount - startAttack > 60){
         this.attackPhase = 2;
       }
       return false;
@@ -243,10 +242,38 @@ class Quill{
       fill(255, 0, 0);
       text("-" + this.sDamage, width/2, height/2);
     }
-    if (frameCount - startAttack > 140){
+    if (frameCount - startAttack > 160){
       this.attackPhase = 1;
       return true;
     }
+  }
+
+  heal(){
+    background(backgroundImg);
+  
+    whisper.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+  
+    boss.display();
+    if (this.attackPhase === 1){
+      image(qImg[2], this.x, this.y);
+      if (frameCount - startAttack > 60){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(qImg[1], this.x, this.y);
+      fill(0, 255, 0);
+      text("+" + this.heal, width/2, height/2);
+    }
+    if (frameCount - startAttack > 160){
+      this.attackPhase = 1;
+      return true;
+    }
+
   }
 
   dealDamage(){
@@ -734,6 +761,7 @@ function secondRound(){
           wChoice = 0;
           print(boss.status());
           turn++;
+          attacking = false;
         } 
       }
       else{
@@ -746,6 +774,7 @@ function secondRound(){
           wChoice = 0;
           print(boss.status());
           turn++;
+          attacking = false;
         } 
       }
     }
