@@ -7,6 +7,7 @@
 
 let backgroundImg;
 let kImg;
+let buImg;
 
 let wImg = [];
 let qImg = [];
@@ -32,9 +33,11 @@ let bChoice = 0;
 
 let menu;
 let knife;
+let bullet;
 
 let startAttack;
 let attacking = false;
+let defence = 0;
 
 let turn = 1;
 let endgame = false;
@@ -44,6 +47,7 @@ function preload(){
 
   backgroundImg = loadImage("assets/bg.jpg");
   kImg = loadImage("assets/knife.png");
+  buImg = loadImage("assets/bullet.png");
 
   for (let i = 1; i < 5; i++){
     wImg.push(loadImage("assets/Whisper" + i + ".png"));
@@ -75,7 +79,7 @@ class Whisper{
     this.y = y_;
     this.x = x_;
     this.sDamage = 50;
-    this.aDamage = 100;
+    this.aDamage = 125;
     this.health = 200;
     this.alive = true;
     this.attackPhase = 1;
@@ -334,7 +338,12 @@ class Hatch{
 
   display(){
     if (this.health > 0){
-      image(hImg[0], this.x, this.y);
+      if (defence === 0){
+        image(hImg[0], this.x, this.y);
+      }
+      else{
+        image(hImg[2], this.x, this.y);
+      }
     }
     else{
       image(hImg[3], this.x, this.y);
@@ -415,6 +424,22 @@ class Hatch{
           this.y -= 4;
         }
       }
+      if (hChoice === 6){
+        if (this.x > width/10){
+          this.x -= 4;
+        }
+        if (this.y < height/2){
+          this.y += 4;
+        }
+      }
+      if (hChoice === 7){
+        if (this.x < width/4){
+          this.x += 4;
+        }
+        if (this.y < height/1.6){
+          this.y += 4;
+        }
+      }
   
       hatch.display();
 
@@ -463,14 +488,96 @@ class Imellia{
   constructor(x_, y_){
     this.y = y_;
     this.x = x_;
-    this.damage = 50;
-    this.heal = 100;
+    this.sDamage = 50;
+    this.sHeal = 100;
     this.health = 150;
     this.alive = true;
+    this.attackPhase = 1;
   }
 
   display(){
-    image(iImg[0], this.x, this.y, 0, height/6);
+    if (this.health > 0){
+      image(iImg[0], this.x, this.y);
+    }
+    else{
+      image(iImg[3], this.x, this.y);
+    }
+  }
+
+  spell(){
+    background(backgroundImg);
+  
+    whisper.display();
+    hatch.display();
+    quill.display();
+    ace.display();
+    boss.display();
+
+    if (this.attackPhase === 1){
+      image(iImg[1], this.x, this.y);
+      if (frameCount - startAttack > 60){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(iImg[1], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.sDamage, width/2, height/2);
+    }
+    if (frameCount - startAttack > 160){
+      this.attackPhase = 1;
+      return true;
+    }
+  }
+
+  heal(){
+    background(backgroundImg);
+    whisper.display();
+    hatch.display();
+    quill.display();
+    ace.display();
+    boss.display();
+
+    if (this.attackPhase === 1){
+      image(iImg[2], this.x, this.y);
+      if (frameCount - startAttack > 60){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(iImg[2], this.x, this.y);
+      fill(0, 255, 255);
+      if (iChoice === 3){
+        text("+" + this.sHeal, width/5, height/6.5);
+      }
+      if (iChoice === 4){
+        text("+" + this.sHeal, width/25, height/4);
+      }
+      if (iChoice === 5){
+        text("+" + this.sHeal, width/5, height/2.7);
+      }
+      if (iChoice === 6){
+        text("+" + this.sHeal, width/25, height/2);
+      }
+      if (iChoice === 7){
+        text("+" + this.sHeal, width/5, height/1.6);
+      }
+    }
+    if (frameCount - startAttack > 160){
+      this.attackPhase = 1;
+      return true;
+    }
+
+  }
+
+  dealDamage(){
+    return this.sDamage;
+  }
+
+  healSomeone(){
+    return this.sHeal;
   }
   
   getDamaged(hp){
@@ -484,10 +591,6 @@ class Imellia{
         this.health = 150;
       }
     }
-  }
-
-  getGuarded(){
-
   }
 
   status(){
@@ -504,14 +607,105 @@ class Ace{
   constructor(x_, y_){
     this.y = y_;
     this.x = x_;
-    this.sDamage = 50;
-    this.aDamage = 100;
+    this.sDamage = 100;
+    this.aDamage = 75;
     this.health = 250;
     this.alive = true;
+    this.attackPhase = 1;
   }
 
   display(){
-    image(aImg[0], this.x, this.y);
+    if (this.health > 0){
+      image(aImg[0], this.x, this.y);
+    }
+    else{
+      image(aImg[3], this.x, this.y);
+    }
+  }
+
+  attack(){
+    background(backgroundImg);
+    quill.display();
+    hatch.display();
+    imellia.display();
+    whisper.display();
+    boss.display();
+
+    if (this.attackPhase === 1){
+      if (this.x < width/2.6){
+        this.x += 4;
+      }
+      if (this.y > height/1.8){
+        this.y -= 4;
+      }
+      ace.display();
+
+      if (frameCount - startAttack > 120){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(aImg[1], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.aDamage, width/2, height/2);
+      if (frameCount - startAttack > 240){
+        this.attackPhase = 3;
+      }
+      return false;
+    }
+    if (this.attackPhase === 3){
+      if (this.x > width/5){
+        this.x -= 4;
+      }
+      if (this.y < height/1.6){
+        this.y += 4;
+      }
+      ace.display();
+
+      if (frameCount - startAttack > 360){
+        this.attackPhase = 1;
+        return true;
+      }
+    }
+  }
+
+  shoot(){
+    background(backgroundImg);
+    quill.display();
+    hatch.display();
+    imellia.display();
+    whisper.display();
+    boss.display();
+
+    if (this.attackPhase === 1){
+      
+      image(aImg[2], this.x, this.y);
+      bullet.shoot();
+      
+      if (frameCount - startAttack > 100){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(aImg[2], this.x, this.y);
+      fill(255, 0, 0);
+      text("-" + this.sDamage, width/2, height/2);
+    }
+    if (frameCount - startAttack > 140){
+      this.attackPhase = 1;
+      return true;
+    }
+  }
+
+  dealDamage(){
+    if (aChoice === 1){
+      return this.aDamage;
+    }
+    else{
+      return this.sDamage;
+    }
   }
 
   getDamaged(hp){
@@ -525,10 +719,6 @@ class Ace{
         this.health = 250;
       }
     }
-  }
-
-  getGuarded(){
-
   }
 
   status(){
@@ -585,7 +775,7 @@ class Knife{
   constructor(x_, y_){
     this.x = x_;
     this.y = y_;
-    this.speed = 7;
+    this.speed = 9;
   }
   throw(){
     if (this.x < width/2){
@@ -594,6 +784,23 @@ class Knife{
         this.y += this.speed / 2;
       }
       image(kImg, this.x, this.y);
+    }
+  }
+}
+
+class Bullet{
+  constructor(x_, y_){
+    this.x = x_;
+    this.y = y_;
+    this.speed = 12;
+  }
+  shoot(){
+    if (this.x < width/2){
+      this.x += this.speed;
+      if (this.y > height/2){
+        this.y -= this.speed / 2;
+      }
+      image(buImg, this.x, this.y);
     }
   }
 }
@@ -940,7 +1147,6 @@ function secondRound(){
             ace.getHealed(quill.healSomeone());
           }
           qChoice = 0;
-          print(whisper.status());
           turn++;
           attacking = false;
         } 
@@ -969,11 +1175,119 @@ function secondRound(){
           startAttack = frameCount;
         }
         if (hatch.defend()){
+          if (hChoice === 3){
+            defence = 1;
+          }
+          if (hChoice === 4){
+            defence = 2;
+          }
+          if (hChoice === 5){
+            defence = 3;
+          }
+          if (hChoice === 5){
+            defence = 4;
+          }
+          if (hChoice === 6){
+            defence = 5;
+          }
           hChoice = 0;
           turn++;
           attacking = false;
         } 
       }
+    }
+  }
+  if (turn === 12){
+    if (iChoice > 0){
+      if (iChoice === 1){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        
+        if (imellia.spell()){
+          boss.getDamaged(imellia.dealDamage());
+          iChoice = 0;
+          print(boss.status());
+          turn++;
+          attacking = false;
+        } 
+      }
+      else{
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        if (imellia.heal()){
+          if (iChoice === 3){
+            whisper.getHealed(imellia.healSomeone());
+          }
+          if (qChoice === 4){
+            quill.getHealed(imellia.healSomeone());
+          }
+          if (qChoice === 5){
+            hatch.getHealed(imellia.healSomeone());
+          }
+          if (qChoice === 5){
+            imellia.getHealed(imellia.healSomeone());
+          }
+          if (qChoice === 6){
+            ace.getHealed(imellia.healSomeone());
+          }
+          iChoice = 0;
+          turn++;
+          attacking = false;
+        } 
+      }
+    }
+  }
+  if (turn === 13){
+    if (aChoice > 0){
+      if (aChoice === 1){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        
+        if (ace.attack()){
+          boss.getDamaged(ace.dealDamage());
+          aChoice = 0;
+          print(boss.status());
+          turn++;
+          attacking = false;
+        } 
+      }
+      else{
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        if (ace.shoot()){
+          boss.getDamaged(ace.dealDamage());
+          aChoice = 0;
+          print(boss.status());
+          turn++;
+          attacking = false;
+        } 
+      }
+    }
+  }
+  if (turn === 14){
+    if (bChoice > 0){
+      if (bChoice === 1){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        
+      }
+      else if (bChoice === 2){
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+      }
+
     }
   }
   
@@ -989,6 +1303,7 @@ function setup() {
   ace = new Ace(width/5, height/1.6);
 
   knife = new Knife(width/5, height/6.5);
+  bullet = new Bullet(width/5, height/1.6);
 
   boss = new Boss(width/2, height/2);
 
