@@ -742,17 +742,109 @@ class Boss{
     this.heal = 250;
     this.health = 2000;
     this.alive = true;
+    this.textX = width/5;
+    this.textY = height/6.5;
+    this.attackPhase = 1;
   }
 
   display(){
+    if (this.health > 0){
+      image(bImg[0], this.x, this.y);
+    }
+    else{
+      image(bImg[3], this.x, this.y);
+    }
+  }
 
-    if (bChoice === 0){
-      if (this.health > 0){
-        image(bImg[0], this.x, this.y);
+  attack(){
+    background(backgroundImg);
+    quill.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+    whisper.display();
+
+    if (this.attackPhase === 1){
+      if (bChoice === 1){
+        if (this.x > width/5){
+          this.x -= 4;
+          this.textX = width/5;
+          this.textY = width/6.5;
+        }
+        if (this.y > height/6.5){
+          this.y -= 4;
+        }
+      }
+      if (bChoice === 2){
+        if (this.x > width/25){
+          this.x -= 4;
+          this.textX = width/25;
+          this.textY = height/4;
+        }
+        if (this.y > height/4){
+          this.y -= 4;
+        }
+      }
+      boss.display();
+
+      if (frameCount - startAttack > 220){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(bImg[2], this.x, this.y);
+      fill(255, 0, 0);
+      if (this.x < width/5){
+        text("-" + this.mDamage2, this.textX, this.textY);
       }
       else{
-        image(bImg[3], this.x, this.y);
+        text("-" + this.mDamage1, width/2, height/2);
       }
+      if (frameCount - startAttack > 320){
+        this.attackPhase = 3;
+      }
+      return false;
+    }
+    if (this.attackPhase === 3){
+      if (this.x < width/2){
+        this.x += 4;
+      }
+      if (this.y < height/2){
+        this.y += 4;
+      }
+      boss.display();
+
+      if (frameCount - startAttack > 520){
+        this.attackPhase = 1;
+        return true;
+      }
+    }
+  }
+
+  spell(){
+
+  }
+
+  heal(){
+
+  }
+
+  dealDamageB(){
+    if (bChoice > 0 && bChoice < 6){
+      return this.mDamage2;
+    }
+    else{
+      return this.sDamage2;
+    }
+  }
+
+  dealDamageF(){
+    if (bChoice > 0 && bChoice < 6){
+      return this.mDamage1;
+    }
+    else{
+      return this.sDamage1;
     }
   }
 
@@ -951,10 +1043,12 @@ function firstRound(){
         menu.display(7);
         menu.hText(ace.status());
         if (aChoice !== 0){
+          bChoice = 1;
           turn ++;
         }
       }
       else{
+        bChoice = 1;
         turn ++;
       }
     }
@@ -1274,23 +1368,34 @@ function secondRound(){
   }
   if (turn === 14){
     if (bChoice > 0){
-      if (bChoice === 1){
+      if (bChoice > 0 && bChoice < 5){
         if (attacking === false){
           attacking = true;
           startAttack = frameCount;
+        }
+        if (boss.attack()){
+          if (bChoice === 1){
+            whisper.getDamaged(boss.dealDamageF());
+            print(whisper.status());
+          }
+          if (bChoice === 2){
+            quill.getDamaged(boss.dealDamageB());
+            print(quill.status());
+          }
+          bChoice = 0;
+          turn = 1;
+          attacking = false;
         }
         
       }
-      else if (bChoice === 2){
+      else if (bChoice > 5){
         if (attacking === false){
           attacking = true;
           startAttack = frameCount;
         }
       }
-
     }
-  }
-  
+  } 
 }
 
 function setup() {
