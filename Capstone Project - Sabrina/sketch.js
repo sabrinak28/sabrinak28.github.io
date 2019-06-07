@@ -34,6 +34,7 @@ let bChoice = 0;
 let menu;
 let knife;
 let bullet;
+let sBalls;
 
 let startAttack;
 let attacking = false;
@@ -70,6 +71,9 @@ function preload(){
 
   for (let i = 1; i < 10; i++){
     menus.push(loadImage("assets/menu" + i + ".jpg"));
+  }
+  for (let i = 1; i < 6; i++){
+    sBalls.push(loadImage("assets/darkMagic" + ".png"));
   }
 }
 
@@ -144,14 +148,13 @@ class Whisper{
 
   shoot(){
     background(backgroundImg);
-  
     quill.display();
     hatch.display();
     imellia.display();
     ace.display();
-  
     boss.display();
     if (this.attackPhase === 1){
+      
       
       image(wImg[2], this.x, this.y);
       knife.throw();
@@ -291,7 +294,6 @@ class Quill{
       this.attackPhase = 1;
       return true;
     }
-
   }
 
   dealDamage(){
@@ -769,7 +771,7 @@ class Boss{
         if (this.x > width/5){
           this.x -= 4;
           this.textX = width/5;
-          this.textY = width/6.5;
+          this.textY = height/6.5;
         }
         if (this.y > height/6.5){
           this.y -= 4;
@@ -783,6 +785,36 @@ class Boss{
         }
         if (this.y > height/4){
           this.y -= 4;
+        }
+      }
+      if (bChoice === 3){
+        if (this.x > width/5){
+          this.x -= 4;
+          this.textX = width/5;
+          this.textY = height/2.7;
+        }
+        if (this.y > height/2.7){
+          this.y -= 4;
+        }
+      }
+      if (bChoice === 4){
+        if (this.x > width/25){
+          this.x -= 4;
+          this.textX = width/25;
+          this.textY = height/2;
+        }
+        if (this.y > height/2){
+          this.y -= 4;
+        }
+      }
+      if (bChoice === 5){
+        if (this.x > width/5){
+          this.x -= 4;
+          this.textX = width/5;
+          this.textY = height/1.6;
+        }
+        if (this.y < height/1.6){
+          this.y += 4;
         }
       }
       boss.display();
@@ -799,7 +831,7 @@ class Boss{
         text("-" + this.mDamage2, this.textX, this.textY);
       }
       else{
-        text("-" + this.mDamage1, width/2, height/2);
+        text("-" + this.mDamage1, this.textX, this.textY);
       }
       if (frameCount - startAttack > 320){
         this.attackPhase = 3;
@@ -823,11 +855,36 @@ class Boss{
   }
 
   spell(){
-
   }
 
   heal(){
+    background(backgroundImg);
+    whisper.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+    quill.display();
 
+    if (this.attackPhase === 1){
+      image(bImg[1], this.x, this.y);
+      if (frameCount - startAttack > 60){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+    if (this.attackPhase === 2){
+      image(bImg[1], this.x, this.y);
+      fill(0, 255, 255);
+      text("+" + this.sHeal, this.x, this.y);
+    }
+    if (frameCount - startAttack > 160){
+      this.attackPhase = 1;
+      return true;
+    }
+  }
+
+  healYourself(){
+    return this.SHeal();
   }
 
   dealDamageB(){
@@ -845,6 +902,15 @@ class Boss{
     }
     else{
       return this.sDamage1;
+    }
+  }
+
+  getHealed(hp){
+    if (this.alive){
+      this.health = this.health + hp;
+      if (this.health > 2000){
+        this.health = 2000;
+      }
     }
   }
 
@@ -897,6 +963,12 @@ class Bullet{
   }
 }
 
+class shadowBall{
+  constructor(x_, y_){
+
+  }
+}
+
 class Menu{
   constructor(x_, y_){
     this.x = x_;
@@ -922,7 +994,6 @@ function firstRound(){
   hatch.display();
   imellia.display();
   ace.display();
-
   boss.display();
 
 
@@ -1043,12 +1114,12 @@ function firstRound(){
         menu.display(7);
         menu.hText(ace.status());
         if (aChoice !== 0){
-          bChoice = 1;
+          bChoice = 7; //int(random(1,5));
           turn ++;
         }
       }
       else{
-        bChoice = 1;
+        bChoice = 7; //int(random(1,5));
         turn ++;
       }
     }
@@ -1163,13 +1234,11 @@ function keyPressed(){
 function secondRound(){
 
   background(backgroundImg);
-  
   whisper.display();
   quill.display();
   hatch.display();
   imellia.display();
   ace.display();
-
   boss.display();
 
   if (turn === 9){
@@ -1201,6 +1270,9 @@ function secondRound(){
           attacking = false;
         } 
       }
+    }
+    else{
+      turn ++;
     }
   }
   if (turn === 10){
@@ -1246,7 +1318,11 @@ function secondRound(){
         } 
       }
     }
+    else{
+      turn ++;
+    }
   }
+
   if (turn === 11){
     if (hChoice > 0){
       if (hChoice === 1){
@@ -1290,7 +1366,11 @@ function secondRound(){
         } 
       }
     }
+    else{
+      turn ++;
+    }
   }
+
   if (turn === 12){
     if (iChoice > 0){
       if (iChoice === 1){
@@ -1334,7 +1414,11 @@ function secondRound(){
         } 
       }
     }
+    else{
+      turn ++;
+    }
   }
+
   if (turn === 13){
     if (aChoice > 0){
       if (aChoice === 1){
@@ -1365,7 +1449,11 @@ function secondRound(){
         } 
       }
     }
+    else{
+      turn ++;
+    }
   }
+
   if (turn === 14){
     if (bChoice > 0){
       if (bChoice > 0 && bChoice < 5){
@@ -1376,11 +1464,18 @@ function secondRound(){
         if (boss.attack()){
           if (bChoice === 1){
             whisper.getDamaged(boss.dealDamageF());
-            print(whisper.status());
           }
           if (bChoice === 2){
             quill.getDamaged(boss.dealDamageB());
-            print(quill.status());
+          }
+          if (bChoice === 3){
+            hatch.getDamaged(boss.dealDamageF());
+          }
+          if (bChoice === 4){
+            imellia.getDamaged(boss.dealDamageB());
+          }
+          if (bChoice === 5){
+            ace.getDamaged(boss.dealDamageF());
           }
           bChoice = 0;
           turn = 1;
@@ -1388,11 +1483,22 @@ function secondRound(){
         }
         
       }
-      else if (bChoice > 5){
+      else if (bChoice === 6){
         if (attacking === false){
           attacking = true;
           startAttack = frameCount;
         }
+      }
+      else{
+        if (attacking === false){
+          attacking = true;
+          startAttack = frameCount;
+        }
+        boss.getHealed(boss.healYourself());
+        bChoice = 0;
+        turn = 1;
+        attacking = false;
+
       }
     }
   } 
