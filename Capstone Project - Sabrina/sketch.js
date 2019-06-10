@@ -155,21 +155,33 @@ class Whisper{
     imellia.display();
     ace.display();
     boss.display();
+
     if (this.attackPhase === 1){
+      //Prepare knife
+      whisper.display();
+      knife = new Knife(width/5, height/6.5);
       
-      
-      image(wImg[2], this.x, this.y);
-      knife.throw();
-      
-      if (frameCount - startAttack > 100){
+      if (frameCount - startAttack > 2){
+        this.criticalHit = int(random(1,3));
         this.attackPhase = 2;
       }
       return false;
     }
+  
     if (this.attackPhase === 2){
+
+      image(wImg[2], this.x, this.y);
+      knife.throw();
+      
+      if (frameCount - startAttack > 100){
+        this.criticalHit = int(random(1,3));
+        this.attackPhase = 3;
+      }
+      return false;
+    }
+    if (this.attackPhase === 3){
       image(wImg[2], this.x, this.y);
       fill(255, 0, 0);
-      this.criticalHit = int(random(1,4));
       if (this.criticalHit === 2){
         text("-" + (this.sDamage + 50), width/2, height/2);
         fill(255, 255, 0);
@@ -631,10 +643,11 @@ class Ace{
   constructor(x_, y_){
     this.y = y_;
     this.x = x_;
-    this.sDamage = 100;
-    this.aDamage = 75;
+    this.sDamage = 75;
+    this.aDamage = 100;
     this.health = 250;
     this.alive = true;
+    this.criticalHit = 0;
     this.attackPhase = 1;
   }
 
@@ -701,21 +714,40 @@ class Ace{
     imellia.display();
     whisper.display();
     boss.display();
-
+    
     if (this.attackPhase === 1){
+      //Prepare Bullet
+      bullet = new Bullet(width/5, height/1.6);
+      ace.display();
+      if (frameCount - startAttack > 20){
+        this.criticalHit = int(random(1,3));
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+
+    if (this.attackPhase === 2){
       
       image(aImg[2], this.x, this.y);
       bullet.shoot();
       
       if (frameCount - startAttack > 100){
-        this.attackPhase = 2;
+        this.criticalHit = int(random(1,3));
+        this.attackPhase = 3;
       }
       return false;
     }
-    if (this.attackPhase === 2){
+    if (this.attackPhase === 3){
       image(aImg[2], this.x, this.y);
       fill(255, 0, 0);
-      text("-" + this.sDamage, width/2, height/2);
+      if (this.criticalHit === 2){
+        text("-" + (this.sDamage + 50), width/2, height/2);
+        fill(255, 255, 0);
+        text("CRITICAL HIT", width/2, height/2 - height/20);
+      }
+      else{
+        text("-" + this.sDamage, width/2, height/2);
+      }
     }
     if (frameCount - startAttack > 140){
       this.attackPhase = 1;
@@ -789,6 +821,7 @@ class Boss{
     whisper.display();
 
     if (this.attackPhase === 1){
+
       if (bChoice === 1){
         if (this.x > width/5){
           this.x -= 4;
@@ -865,6 +898,8 @@ class Boss{
       if (this.x < width/5){
         if (defended){
           text("-" + (this.mDamage2 - 100), this.textX, this.textY);
+          fill(200);
+          text("DEFENDED", this.textX, this.textY - height/20);
         }
         else{
           text("-" + this.mDamage2, this.textX, this.textY);
@@ -873,6 +908,8 @@ class Boss{
       else{
         if (defended){
           text("-" + (this.mDamage1 - 100), this.textX, this.textY);
+          fill(200);
+          text("DEFENDED", this.textX, this.textY - height/20);
         }
         else{
           text("-" + this.mDamage1, this.textX, this.textY);
@@ -1074,191 +1111,159 @@ function firstRound(){
   ace.display();
   boss.display();
 
+  //Whisper's turn:----------
 
-  if(whisper.status() + quill.status() + hatch.status() + imellia.status() + ace.status() > 0){
-
-    //Whisper's turn:----------
-
-    if (turn === 1){
-      if (whisper.status() > 0){
-        menu.display(0);
-        menu.hText(whisper.status());
-        if (wChoice !== 0){
-          print(wChoice);
-          turn ++;
-        }
-      }
-      else{
+  if (turn === 1){
+    if (whisper.status() > 0){
+      menu.display(0);
+      menu.hText(whisper.status());
+      if (wChoice !== 0){
         turn ++;
       }
     }
-
-    //-------------------------
-
-    //Quill's turn:------------------
-
-    if (turn === 2){
-      if (quill.status() > 0){
-        menu.display(1);
-        menu.hText(quill.status());
-        if (qChoice !== 0){
-          if (qChoice === 2){
-            turn ++;
-          }
-          else{
-            turn += 2;
-          }
-        }
-      }
-      else{
-        turn += 2;
-      }
+    else{
+      turn ++;
     }
+  }
 
-    if (turn === 3){
-      menu.display(2);
+  //-------------------------
+
+  //Quill's turn:------------------
+
+  if (turn === 2){
+    if (quill.status() > 0){
+      menu.display(1);
       menu.hText(quill.status());
-      if (qChoice !== 2){
-        turn ++;
-      }
-    }
-
-    //-------------------------------
-
-    //Hatch's turn:------------------
-
-    if (turn === 4){
-      if (hatch.status() > 0){
-        menu.display(3);
-        menu.hText(hatch.status());
-        if (hChoice !== 0){
-          if (hChoice === 2){
-            turn ++;
-          }
-          else{
-            turn += 2;
-          }
-        }
-      }
-      else{
-        turn += 2;
-      }
-    }
-
-    if (turn === 5){
-      menu.display(4);
-      menu.hText(hatch.status());
-      if (hChoice !== 2){
-        turn ++;
-      }
-    }
-
-    //--------------------------------
-
-    //Imellia's turn:-----------------
-
-    if (turn === 6){
-      if (imellia.status() > 0){
-        menu.display(5);
-        menu.hText(imellia.status());
-        if (iChoice !== 0){
-          if (iChoice === 2){
-            turn ++;
-          }
-          else{
-            turn += 2;
-          }
-        }
-      }
-      else{
-        turn += 2;
-      }
-    }
-
-    if (turn === 7){
-      menu.display(6);
-      menu.hText(imellia.status());
-      if (iChoice !== 2){
-        turn ++;
-      }
-    }
-
-    //-------------------------------------
-
-    //Ace's Turn:----------------------
-
-    if (turn === 8){
-      if (ace.status() > 0){
-        menu.display(7);
-        menu.hText(ace.status());
-        if (aChoice !== 0){
-
-          bChoice = 1; //int(random(1,4));
-          if (bChoice === 1){
-            bChoice = int(random(1, 6)); //Attack
-            if (bChoice === 5 && ace.status() < 1){
-              bChoice === 4;
-            }
-            if (bChoice === 4 && imellia.status() < 1){
-              bChoice === 3;
-            }
-            if (bChoice === 3 && hatch.status() < 1){
-              bChoice === 2;
-            }
-            if (bChoice === 2 && quill.status() < 1){
-              bChoice === 1;
-            }
-            if (bChoice === 1 && whisper.status() < 1){
-              if (ace.status > 1){
-                bChoice === 5;
-              }
-            }
-          }
-          else if (bChoice === 2){
-            bChoice = 6; //Spell
-          }
-          else{
-            bChoice = 7; //Heal
-          }
-
+      if (qChoice !== 0){
+        if (qChoice === 2){
           turn ++;
-        }
-      }
-      else{
-        bChoice = 1; //int(random(1,4));
-        if (bChoice === 1){
-          bChoice = int(random(1, 6)); //Attack
-          if (bChoice === 5 && ace.status() < 1){
-            bChoice === 4;
-          }
-          if (bChoice === 4 && imellia.status() < 1){
-            bChoice === 3;
-          }
-          if (bChoice === 3 && hatch.status() < 1){
-            bChoice === 2;
-          }
-          if (bChoice === 2 && quill.status() < 1){
-            bChoice === 1;
-          }
-          if (bChoice === 1 && whisper.status() < 1){
-            if (ace.status > 1){
-              bChoice === 5;
-            }
-          }
-        }
-        else if (bChoice === 2){
-          bChoice = 6; //Spell
         }
         else{
-          bChoice = 7; //Heal
+          turn += 2;
         }
+      }
+    }
+    else{
+      turn += 2;
+    }
+  }
+
+  if (turn === 3){
+    menu.display(2);
+    menu.hText(quill.status());
+    if (qChoice !== 2){
+      turn ++;
+    }
+  }
+
+  //-------------------------------
+
+  //Hatch's turn:------------------
+
+  if (turn === 4){
+    if (hatch.status() > 0){
+      menu.display(3);
+      menu.hText(hatch.status());
+      if (hChoice !== 0){
+        if (hChoice === 2){
+          turn ++;
+        }
+        else{
+          turn += 2;
+        }
+      }
+    }
+    else{
+      turn += 2;
+    }
+  }
+
+  if (turn === 5){
+    menu.display(4);
+    menu.hText(hatch.status());
+    if (hChoice !== 2){
+      turn ++;
+    }
+  }
+
+  //--------------------------------
+
+  //Imellia's turn:-----------------
+
+  if (turn === 6){
+    if (imellia.status() > 0){
+      menu.display(5);
+      menu.hText(imellia.status());
+      if (iChoice !== 0){
+        if (iChoice === 2){
+          turn ++;
+        }
+        else{
+          turn += 2;
+        }
+      }
+    }
+    else{
+      turn += 2;
+    }
+  }
+
+  if (turn === 7){
+    menu.display(6);
+    menu.hText(imellia.status());
+    if (iChoice !== 2){
+      turn ++;
+    }
+  }
+
+  //-------------------------------------
+
+  //Ace's Turn:----------------------
+
+  if (turn === 8){
+    if (ace.status() > 0){
+      menu.display(7);
+      menu.hText(ace.status());
+      if (aChoice !== 0){
         turn ++;
       }
     }
-
-    //---------------------------------
-
+    else{
+      turn ++;
+    }
   }
+
+  if (turn === 9){
+    bChoice = 1; //int(random(1,4));
+    if (bChoice === 1){
+      bChoice = int(random(1, 6)); //Attack
+    }
+    else if (bChoice === 2){
+      bChoice = 6; //Spell
+    }
+    else{
+      bChoice = 7; //Heal
+    }
+    if (bChoice === 5 && ace.status() < 1){
+      bChoice === 4;
+    }
+    if (bChoice === 4 && imellia.status() < 1){
+      bChoice === 3;
+    }
+    if (bChoice === 3 && hatch.status() < 1){
+      bChoice === 2;
+    }
+    if (bChoice === 2 && quill.status() < 1){
+      bChoice === 1;
+    }
+    if (bChoice === 1 && whisper.status() < 1){
+      if (ace.status() > 1){
+        bChoice === 5;
+      }
+    }
+    print(bChoice);
+    turn++;    
+  } 
 }
 
 function keyPressed(){
@@ -1373,7 +1378,7 @@ function secondRound(){
   ace.display();
   boss.display();
 
-  if (turn === 9){
+  if (turn === 10){
     if (wChoice > 0){
       if (wChoice === 1){
         if (attacking === false){
@@ -1407,7 +1412,7 @@ function secondRound(){
       turn ++;
     }
   }
-  if (turn === 10){
+  if (turn === 11){
     if (qChoice > 0){
       if (qChoice === 1){
         if (attacking === false){
@@ -1455,7 +1460,7 @@ function secondRound(){
     }
   }
 
-  if (turn === 11){
+  if (turn === 12){
     if (hChoice > 0){
       if (hChoice === 1){
         if (attacking === false){
@@ -1503,7 +1508,7 @@ function secondRound(){
     }
   }
 
-  if (turn === 12){
+  if (turn === 13){
     if (iChoice > 0){
       if (iChoice === 1){
         if (attacking === false){
@@ -1551,7 +1556,7 @@ function secondRound(){
     }
   }
 
-  if (turn === 13){
+  if (turn === 14){
     if (aChoice > 0){
       if (aChoice === 1){
         if (attacking === false){
@@ -1586,7 +1591,7 @@ function secondRound(){
     }
   }
 
-  if (turn === 14){
+  if (turn === 15){
     if (bChoice > 0){
       if (bChoice > 0 && bChoice < 6){
         if (attacking === false){
@@ -1645,10 +1650,6 @@ function secondRound(){
   } 
 }
 
-function checkEnd(){
-
-}
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
@@ -1657,13 +1658,12 @@ function setup() {
   hatch = new Hatch(width/5, height/2.7);
   imellia = new Imellia(width/25, height/2);
   ace = new Ace(width/5, height/1.6);
-
-  knife = new Knife(width/5, height/6.5);
-  bullet = new Bullet(width/5, height/1.6);
-
   boss = new Boss(width/2, height/2);
-
   menu = new Menu(width/7,height/1.15);
+
+}
+
+function checkEnd(){
 
 }
 
@@ -1671,7 +1671,7 @@ function draw() {
 
   if (endgame === false){
 
-    if (turn > 8){
+    if (turn > 9){
       secondRound();
     }
     else{
@@ -1681,8 +1681,7 @@ function draw() {
 }
 
 //- Fix Hatch's defend system
-// - Fix the bullets, knives, and spheres
 // - Make an endgame function
 // - Create the magic attack for the boss
-// - Fix dead body position
-// - Fix critical hit
+// - Boss should not attack a dead person
+// - Return Hatch to original position after defending
