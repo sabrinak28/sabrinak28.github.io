@@ -439,15 +439,41 @@ class Hatch{
         if (this.x < width/4){
           this.x += 4;
         }
+        else if (this.x > width/4){
+          this.x -= 4;
+        }
         if (this.y > height/6.5){
           this.y -= 4;
+        }
+        if (this.y < height/6.5){
+          this.y += 4;
         }
       }
       if (hChoice === 4){
         if (this.x > width/10){
           this.x -= 4;
         }
+        else if (this.x < width/10){
+          this.x += 4;
+        }
         if (this.y > height/4){
+          this.y -= 4;
+        }
+        else if (this.y < height/4){
+          this.y += 4;
+        }
+      }
+      if (hChoice === 5){
+        if (this.x > width/5){
+          this.x -= 4;
+        }
+        else if (this.x < width/5){
+          this.x += 4;
+        }
+        if (this.y < height/2.7){
+          this.y += 4;
+        }
+        else if (this.y > height/2.7){
           this.y -= 4;
         }
       }
@@ -455,16 +481,28 @@ class Hatch{
         if (this.x > width/10){
           this.x -= 4;
         }
+        else if (this.x < width/10){
+          this.x += 4;
+        }
         if (this.y < height/2){
           this.y += 4;
+        }
+        else if (this.y > height/2){
+          this.y -= 4;
         }
       }
       if (hChoice === 7){
         if (this.x < width/4){
           this.x += 4;
         }
+        else if (this.x > width/4){
+          this.x -= 4;
+        }
         if (this.y < height/1.6){
           this.y += 4;
+        }
+        else if (this.y > height/1.6){
+          this.y -= 4;
         }
       }
   
@@ -1078,9 +1116,29 @@ class shadowBall{
     this.x = x_;
     this.y = y_;
     this.speed = 8;
+    this.movePhase = 1;
   }
-  cast(){
-
+  cast(n){
+    if (this.attackPhase === 1){
+      if (n === 1){
+        if (this.x < width/2){
+          this.x += this.speed;
+          if (this.y > height/2){
+            this.y -= this.speed / 2;
+          }
+          image(buImg, this.x, this.y);
+        } 
+      }
+      if (n === 2){
+        if (this.x < width/2){
+          this.x += this.speed;
+          if (this.y > height/2){
+            this.y -= this.speed / 2;
+          }
+          image(buImg, this.x, this.y);
+        } 
+      }
+    }
   }
 }
 
