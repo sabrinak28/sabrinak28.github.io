@@ -39,6 +39,7 @@ let sBalls;
 let startAttack;
 let attacking = false;
 let defence = 0;
+let defended = false;
 
 let turn = 1;
 let endgame = false;
@@ -82,11 +83,12 @@ class Whisper{
   constructor(x_, y_){
     this.y = y_;
     this.x = x_;
-    this.sDamage = 50;
+    this.sDamage = 100;
     this.aDamage = 125;
     this.health = 200;
     this.alive = true;
     this.attackPhase = 1;
+    this.criticalHit = 0;
   }
 
   display(){
@@ -94,7 +96,7 @@ class Whisper{
       image(wImg[0], this.x, this.y);
     }
     else{
-      image(wImg[3], this.x, this.y);
+      image(wImg[3], this.x, this.y + height/7);
     }
   }
 
@@ -167,7 +169,15 @@ class Whisper{
     if (this.attackPhase === 2){
       image(wImg[2], this.x, this.y);
       fill(255, 0, 0);
-      text("-" + this.sDamage, width/2, height/2);
+      this.criticalHit = int(random(1,4));
+      if (this.criticalHit === 2){
+        text("-" + (this.sDamage + 50), width/2, height/2);
+        fill(255, 255, 0);
+        text("CRITICAL HIT", width/2, height/2 - height/20);
+      }
+      else{
+        text("-" + this.sDamage, width/2, height/2);
+      }
     }
     if (frameCount - startAttack > 140){
       this.attackPhase = 1;
@@ -180,7 +190,12 @@ class Whisper{
       return this.aDamage;
     }
     else{
-      return this.sDamage;
+      if (this.criticalHit === 2){
+        return this.sDamage + 50;
+      }
+      else{
+        return this.sDamage;
+      }
     }
   }
 
@@ -224,7 +239,7 @@ class Quill{
       image(qImg[0], this.x, this.y);
     }
     else{
-      image(qImg[3], this.x, this.y);
+      image(qImg[3], this.x, this.y + height/7);
     }
   }
 
@@ -281,7 +296,7 @@ class Quill{
         text("+" + this.sHeal, width/25, height/4);
       }
       if (qChoice === 5){
-        text("+" + this.sHeal, width/5, height/2.7);
+        text("+" + this.sHeal, hatch.getLocation(1), hatch.getLocation(2));
       }
       if (qChoice === 6){
         text("+" + this.sHeal, width/25, height/2);
@@ -332,7 +347,6 @@ class Hatch{
     this.y = y_;
     this.x = x_;
     this.aDamage = 50;
-    this.aDefend = 75;
     this.health = 300;
     this.alive = true;
     this.attackPhase = 1;
@@ -348,19 +362,18 @@ class Hatch{
       }
     }
     else{
-      image(hImg[3], this.x, this.y);
+      image(hImg[3], this.x, this.y + height/7);
     }
   }
 
   attack(){
     background(backgroundImg);
-  
     whisper.display();
     quill.display();
     imellia.display();
     ace.display();
-
     boss.display();
+
     if (this.attackPhase === 1){
       if (this.x < width/2.6){
         this.x += 4;
@@ -459,6 +472,15 @@ class Hatch{
     }
   }
 
+  getLocation(c){
+    if (c === 1){
+      return this.x;
+    }
+    else{
+      return this.y;
+    }
+  }
+
   dealDamage(){
     return this.aDamage;
   }
@@ -502,7 +524,7 @@ class Imellia{
       image(iImg[0], this.x, this.y);
     }
     else{
-      image(iImg[3], this.x, this.y);
+      image(iImg[3], this.x, this.y + height/7);
     }
   }
 
@@ -558,7 +580,7 @@ class Imellia{
         text("+" + this.sHeal, width/25, height/4);
       }
       if (iChoice === 5){
-        text("+" + this.sHeal, width/5, height/2.7);
+        text("+" + this.sHeal, hatch.getLocation(1), hatch.getLocation(2));
       }
       if (iChoice === 6){
         text("+" + this.sHeal, width/25, height/2);
@@ -621,7 +643,7 @@ class Ace{
       image(aImg[0], this.x, this.y);
     }
     else{
-      image(aImg[3], this.x, this.y);
+      image(aImg[3], this.x, this.y + height/7);
     }
   }
 
@@ -741,8 +763,8 @@ class Boss{
     this.mDamage2 = 125;
     this.aDamage1 = 50;
     this.aDamage1 = 25;
-    this.heal = 250;
-    this.health = 2000;
+    this.sHeal = 250;
+    this.health = 2500;
     this.alive = true;
     this.textX = width/5;
     this.textY = height/6.5;
@@ -788,13 +810,26 @@ class Boss{
         }
       }
       if (bChoice === 3){
-        if (this.x > width/5){
-          this.x -= 4;
-          this.textX = width/5;
-          this.textY = height/2.7;
+
+        if (defence < 5){
+          if (this.x > hatch.getLocation(1)){
+            this.x -= 4;
+            this.textX = hatch.getLocation(1);
+            this.textY = hatch.getLocation(2);
+          }
+          if (this.y > hatch.getLocation(2)){
+            this.y -= 4;
+          }
         }
-        if (this.y > height/2.7){
-          this.y -= 4;
+        else{
+          if (this.x > hatch.getLocation(1)){
+            this.x -= 4;
+            this.textX = hatch.getLocation(1);
+            this.textY = hatch.getLocation(2);
+          }
+          if (this.y < hatch.getLocation(2)){
+            this.y += 4;
+          }
         }
       }
       if (bChoice === 4){
@@ -828,10 +863,20 @@ class Boss{
       image(bImg[2], this.x, this.y);
       fill(255, 0, 0);
       if (this.x < width/5){
-        text("-" + this.mDamage2, this.textX, this.textY);
+        if (defended){
+          text("-" + (this.mDamage2 - 100), this.textX, this.textY);
+        }
+        else{
+          text("-" + this.mDamage2, this.textX, this.textY);
+        }
       }
       else{
-        text("-" + this.mDamage1, this.textX, this.textY);
+        if (defended){
+          text("-" + (this.mDamage1 - 100), this.textX, this.textY);
+        }
+        else{
+          text("-" + this.mDamage1, this.textX, this.textY);
+        }
       }
       if (frameCount - startAttack > 320){
         this.attackPhase = 3;
@@ -842,9 +887,17 @@ class Boss{
       if (this.x < width/2){
         this.x += 4;
       }
-      if (this.y < height/2){
-        this.y += 4;
+      if (bChoice < 5){
+        if (this.y < height/2){
+          this.y += 4;
+        }
       }
+      else{
+        if (this.y > height/2){
+          this.y -= 4;
+        }
+      }
+
       boss.display();
 
       if (frameCount - startAttack > 520){
@@ -884,32 +937,52 @@ class Boss{
   }
 
   healYourself(){
-    return this.SHeal();
+    return this.sHeal();
   }
 
   dealDamageB(){
     if (bChoice > 0 && bChoice < 6){
-      return this.mDamage2;
+      if (defended){
+        return this.mDamage2 - 100;
+      }
+      else{
+        return this.mDamage2;
+      }
     }
     else{
-      return this.sDamage2;
+      if (defended){
+        return 0;
+      }
+      else{
+        return this.sDamage2;
+      }
     }
   }
 
   dealDamageF(){
     if (bChoice > 0 && bChoice < 6){
-      return this.mDamage1;
+      if (defended){
+        return this.mDamage1 - 100;
+      }
+      else{
+        return this.mDamage1;
+      }
     }
     else{
-      return this.sDamage1;
+      if (defended){
+        return 0;
+      }
+      else{
+        return this.sDamage1;
+      }
     }
   }
 
   getHealed(hp){
     if (this.alive){
       this.health = this.health + hp;
-      if (this.health > 2000){
-        this.health = 2000;
+      if (this.health > 2500){
+        this.health = 2500;
       }
     }
   }
@@ -965,6 +1038,11 @@ class Bullet{
 
 class shadowBall{
   constructor(x_, y_){
+    this.x = x_;
+    this.y = y_;
+    this.speed = 8;
+  }
+  cast(){
 
   }
 }
@@ -1114,12 +1192,66 @@ function firstRound(){
         menu.display(7);
         menu.hText(ace.status());
         if (aChoice !== 0){
-          bChoice = 7; //int(random(1,5));
+
+          bChoice = 1; //int(random(1,4));
+          if (bChoice === 1){
+            bChoice = int(random(1, 6)); //Attack
+            if (bChoice === 5 && ace.status() < 1){
+              bChoice === 4;
+            }
+            if (bChoice === 4 && imellia.status() < 1){
+              bChoice === 3;
+            }
+            if (bChoice === 3 && hatch.status() < 1){
+              bChoice === 2;
+            }
+            if (bChoice === 2 && quill.status() < 1){
+              bChoice === 1;
+            }
+            if (bChoice === 1 && whisper.status() < 1){
+              if (ace.status > 1){
+                bChoice === 5;
+              }
+            }
+          }
+          else if (bChoice === 2){
+            bChoice = 6; //Spell
+          }
+          else{
+            bChoice = 7; //Heal
+          }
+
           turn ++;
         }
       }
       else{
-        bChoice = 7; //int(random(1,5));
+        bChoice = 1; //int(random(1,4));
+        if (bChoice === 1){
+          bChoice = int(random(1, 6)); //Attack
+          if (bChoice === 5 && ace.status() < 1){
+            bChoice === 4;
+          }
+          if (bChoice === 4 && imellia.status() < 1){
+            bChoice === 3;
+          }
+          if (bChoice === 3 && hatch.status() < 1){
+            bChoice === 2;
+          }
+          if (bChoice === 2 && quill.status() < 1){
+            bChoice === 1;
+          }
+          if (bChoice === 1 && whisper.status() < 1){
+            if (ace.status > 1){
+              bChoice === 5;
+            }
+          }
+        }
+        else if (bChoice === 2){
+          bChoice = 6; //Spell
+        }
+        else{
+          bChoice = 7; //Heal
+        }
         turn ++;
       }
     }
@@ -1354,10 +1486,10 @@ function secondRound(){
           if (hChoice === 5){
             defence = 3;
           }
-          if (hChoice === 5){
+          if (hChoice === 6){
             defence = 4;
           }
-          if (hChoice === 6){
+          if (hChoice === 7){
             defence = 5;
           }
           hChoice = 0;
@@ -1456,10 +1588,15 @@ function secondRound(){
 
   if (turn === 14){
     if (bChoice > 0){
-      if (bChoice > 0 && bChoice < 5){
+      if (bChoice > 0 && bChoice < 6){
         if (attacking === false){
           attacking = true;
           startAttack = frameCount;
+        }
+        for (let i = 1; i < 6; i ++){
+          if (bChoice === i && defence === i){
+            defended = true;
+          }
         }
         if (boss.attack()){
           if (bChoice === 1){
@@ -1478,7 +1615,9 @@ function secondRound(){
             ace.getDamaged(boss.dealDamageF());
           }
           bChoice = 0;
+          defence = 0;
           turn = 1;
+          defended = false;
           attacking = false;
         }
         
@@ -1496,12 +1635,18 @@ function secondRound(){
         }
         boss.getHealed(boss.healYourself());
         bChoice = 0;
+        defence = 0;
         turn = 1;
+        defended = false;
         attacking = false;
 
       }
     }
   } 
+}
+
+function checkEnd(){
+
 }
 
 function setup() {
@@ -1534,3 +1679,10 @@ function draw() {
     }
   }
 }
+
+//- Fix Hatch's defend system
+// - Fix the bullets, knives, and spheres
+// - Make an endgame function
+// - Create the magic attack for the boss
+// - Fix dead body position
+// - Fix critical hit
