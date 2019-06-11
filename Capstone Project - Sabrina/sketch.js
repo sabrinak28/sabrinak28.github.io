@@ -8,6 +8,7 @@
 let backgroundImg;
 let kImg;
 let buImg;
+let sBalls = [];
 
 let wImg = [];
 let qImg = [];
@@ -34,7 +35,8 @@ let bChoice = 0;
 let menu;
 let knife;
 let bullet;
-let sBalls;
+let sbArray = [];
+let sbAmount;
 
 let startAttack;
 let attacking = false;
@@ -361,6 +363,8 @@ class Hatch{
     this.aDamage = 50;
     this.health = 300;
     this.alive = true;
+    this.xTravel = 0;
+    this.yTravel = 0;
     this.attackPhase = 1;
   }
 
@@ -436,74 +440,37 @@ class Hatch{
     
     if (this.attackPhase === 1){
       if (hChoice === 3){
-        if (this.x < width/4){
-          this.x += 4;
-        }
-        else if (this.x > width/4){
-          this.x -= 4;
-        }
-        if (this.y > height/6.5){
-          this.y -= 4;
-        }
-        if (this.y < height/6.5){
-          this.y += 4;
-        }
+        this.xTravel = width/4;
+        this.yTravel = height/6.5;
       }
       if (hChoice === 4){
-        if (this.x > width/10){
-          this.x -= 4;
-        }
-        else if (this.x < width/10){
-          this.x += 4;
-        }
-        if (this.y > height/4){
-          this.y -= 4;
-        }
-        else if (this.y < height/4){
-          this.y += 4;
-        }
+        this.xTravel = width/10;
+        this.yTravel = height/4;
       }
       if (hChoice === 5){
-        if (this.x > width/5){
-          this.x -= 4;
-        }
-        else if (this.x < width/5){
-          this.x += 4;
-        }
-        if (this.y < height/2.7){
-          this.y += 4;
-        }
-        else if (this.y > height/2.7){
-          this.y -= 4;
-        }
+        this.xTravel = width/5;
+        this.yTravel = height/2.7;
       }
       if (hChoice === 6){
-        if (this.x > width/10){
-          this.x -= 4;
-        }
-        else if (this.x < width/10){
-          this.x += 4;
-        }
-        if (this.y < height/2){
-          this.y += 4;
-        }
-        else if (this.y > height/2){
-          this.y -= 4;
-        }
+        this.xTravel = width/10;
+        this.yTravel = height/2;
       }
       if (hChoice === 7){
-        if (this.x < width/4){
-          this.x += 4;
-        }
-        else if (this.x > width/4){
-          this.x -= 4;
-        }
-        if (this.y < height/1.6){
-          this.y += 4;
-        }
-        else if (this.y > height/1.6){
-          this.y -= 4;
-        }
+        this.xTravel = width/4;
+        this.yTravel = height/1.6;
+      }
+
+      if (this.x < this.xTravel + 4){
+        this.x += 4;
+      }
+      else{
+        this.x -= 4;
+      }
+      if (this.y < this.yTravel + 4){
+        this.y += 4;
+      }
+      else{
+        this.y -= 4;
       }
   
       hatch.display();
@@ -983,6 +950,55 @@ class Boss{
   }
 
   spell(){
+    background(backgroundImg);
+    quill.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+    whisper.display();
+
+    if (this.attackPhase === 1){
+
+      //Prepare magic
+      boss.display();
+
+      for (let i = 0; i <= sbAmount; i++){
+        sbArray.push(new ShadowBall(width/5, height/6.5));
+      }
+
+      if (frameCount - startAttack > 2){
+        this.attackPhase = 2;
+      }
+      return false;
+    }
+  
+    if (this.attackPhase === 2){
+
+      image(bImg[2], this.x, this.y);
+      for (let c = 0; c < sbArray.length; c++){
+        sbArray[c].cast(c);
+      }
+
+      if (frameCount - startAttack > 100){
+        this.attackPhase = 3;
+      }
+      return false;
+    }
+    if (this.attackPhase === 3){
+      image(bImg[2], this.x, this.y);
+      if (defence === 1){
+        fill(255, 0, 0);
+        text("DEFENDED", width/5, height/6.5 - height/20);
+      }
+      else{
+        text("-" + this.sDamage1, width/5, height/6.5);
+      }
+    }
+
+    if (frameCount - startAttack > 140){
+      this.attackPhase = 1;
+      return true;
+    }
   }
 
   heal(){
@@ -1111,7 +1127,7 @@ class Bullet{
   }
 }
 
-class shadowBall{
+class ShadowBall{
   constructor(x_, y_){
     this.x = x_;
     this.y = y_;
@@ -1292,7 +1308,7 @@ function firstRound(){
   }
 
   if (turn === 9){
-    bChoice = 1; //int(random(1,4));
+    bChoice = 2; //int(random(1,4));
     if (bChoice === 1){
       bChoice = int(random(1, 6)); //Attack
     }
@@ -1690,6 +1706,42 @@ function secondRound(){
           attacking = true;
           startAttack = frameCount;
         }
+        if (boss.spell()){
+          if (defence === 1){
+            defended = true;
+          }
+          whisper.getDamaged(boss.dealDamageF());
+          defended = false;
+
+          if (defence === 2){
+            defended = true;
+          }
+          quill.getDamaged(boss.dealDamageB());
+          defended = false;
+
+          if (defence === 3){
+            defended = true;
+          }
+          hatch.getDamaged(boss.dealDamageF());
+          defended = false;
+
+          if (defence === 4){
+            defended = true;
+          }
+          imellia.getDamaged(boss.dealDamageB());
+          defended = false;
+
+          if (defence === 1){
+            defended = true;
+          }
+          ace.getDamaged(boss.dealDamageF());
+          defended = false;
+        }
+
+        bChoice = 0;
+        defence = 0;
+        turn = 1;
+        attacking = false;
       }
       else{
         if (attacking === false){
