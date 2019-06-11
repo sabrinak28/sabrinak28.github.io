@@ -8,7 +8,7 @@
 let backgroundImg;
 let kImg;
 let buImg;
-let sBalls = [];
+let sBall;
 
 let wImg = [];
 let qImg = [];
@@ -52,6 +52,7 @@ function preload(){
   backgroundImg = loadImage("assets/bg.jpg");
   kImg = loadImage("assets/knife.png");
   buImg = loadImage("assets/bullet.png");
+  sBall = loadImage("assets/darkMagic1.png");
 
   for (let i = 1; i < 5; i++){
     wImg.push(loadImage("assets/Whisper" + i + ".png"));
@@ -74,9 +75,6 @@ function preload(){
 
   for (let i = 1; i < 10; i++){
     menus.push(loadImage("assets/menu" + i + ".jpg"));
-  }
-  for (let i = 1; i < 6; i++){
-    sBalls.push(loadImage("assets/darkMagic" + ".png"));
   }
 }
 
@@ -798,8 +796,8 @@ class Boss{
     this.x = x_;
     this.mDamage1 = 175;
     this.mDamage2 = 125;
-    this.aDamage1 = 50;
-    this.aDamage1 = 25;
+    this.sDamage1 = 50;
+    this.sDamage2 = 25;
     this.sHeal = 250;
     this.health = 2500;
     this.alive = true;
@@ -956,6 +954,7 @@ class Boss{
     imellia.display();
     ace.display();
     whisper.display();
+    print(frameCount - startAttack);
 
     if (this.attackPhase === 1){
 
@@ -963,7 +962,7 @@ class Boss{
       boss.display();
 
       for (let i = 0; i <= sbAmount; i++){
-        sbArray.push(new ShadowBall(width/5, height/6.5));
+        sbArray.push(new ShadowBall(width/2, height/2));
       }
 
       if (frameCount - startAttack > 2){
@@ -974,7 +973,7 @@ class Boss{
   
     if (this.attackPhase === 2){
 
-      image(bImg[2], this.x, this.y);
+      image(bImg[1], this.x, this.y);
       for (let c = 0; c < sbArray.length; c++){
         sbArray[c].cast(c);
       }
@@ -985,7 +984,7 @@ class Boss{
       return false;
     }
     if (this.attackPhase === 3){
-      image(bImg[2], this.x, this.y);
+      image(bImg[1], this.x, this.y);
       if (defence === 1){
         fill(255, 0, 0);
         text("DEFENDED", width/5, height/6.5 - height/20);
@@ -999,6 +998,7 @@ class Boss{
       this.attackPhase = 1;
       return true;
     }
+    return false;
   }
 
   heal(){
@@ -1120,7 +1120,7 @@ class Bullet{
     if (this.x < width/2){
       this.x += this.speed;
       if (this.y > height/2){
-        this.y -= this.speed / 2;
+        this.y -= this.speed;
       }
       image(buImg, this.x, this.y);
     }
@@ -1135,23 +1135,50 @@ class ShadowBall{
     this.movePhase = 1;
   }
   cast(n){
-    if (this.attackPhase === 1){
-      if (n === 1){
-        if (this.x < width/2){
-          this.x += this.speed;
-          if (this.y > height/2){
+    if (this.movePhase === 1){
+      if (n === 0){
+        if (this.x > width/5){
+          this.x -= this.speed;
+          if (this.y > height/6.5){
             this.y -= this.speed / 2;
           }
-          image(buImg, this.x, this.y);
+          image(sBall, this.x, this.y);
+        } 
+      }
+      if (n === 1){
+        if (this.x > width/25){
+          this.x -= this.speed;
+          if (this.y > height/4){
+            this.y -= this.speed / 2;
+          }
+          image(sBall, this.x, this.y);
         } 
       }
       if (n === 2){
-        if (this.x < width/2){
+        if (this.x < width/5){
+          this.x += this.speed;
+          if (this.y > height/2.7){
+            this.y -= this.speed / 2;
+          }
+          image(sBall, this.x, this.y);
+        } 
+      }
+      if (n === 3){
+        if (this.x < width/25){
           this.x += this.speed;
           if (this.y > height/2){
             this.y -= this.speed / 2;
           }
-          image(buImg, this.x, this.y);
+          image(sBall, this.x, this.y);
+        } 
+      }
+      if (n === 4){
+        if (this.x < width/5){
+          this.x += this.speed;
+          if (this.y > height/1.6){
+            this.y -= this.speed / 2;
+          }
+          image(sBall, this.x, this.y);
         } 
       }
     }
@@ -1707,41 +1734,58 @@ function secondRound(){
           startAttack = frameCount;
         }
         if (boss.spell()){
-          if (defence === 1){
-            defended = true;
+          //print("b");
+          if (whisper.status() > 0){
+            if (defence === 1){
+              defended = true;
+            }
+            print("damage:", boss.dealDamageF());
+            whisper.getDamaged(boss.dealDamageF());
+            defended = false;
+            sbAmount ++;  
           }
-          whisper.getDamaged(boss.dealDamageF());
-          defended = false;
 
-          if (defence === 2){
-            defended = true;
+          if (quill.status() > 0){
+            if (defence === 2){
+              defended = true;
+            }
+            quill.getDamaged(boss.dealDamageB());
+            defended = false;
+            sbAmount ++;
           }
-          quill.getDamaged(boss.dealDamageB());
-          defended = false;
 
-          if (defence === 3){
-            defended = true;
+          if (hatch.status() > 0){
+            if (defence === 3){
+              defended = true;
+            }
+            hatch.getDamaged(boss.dealDamageF());
+            defended = false;
+            sbAmount ++;
           }
-          hatch.getDamaged(boss.dealDamageF());
-          defended = false;
 
-          if (defence === 4){
-            defended = true;
+          if (imellia.status() > 0){
+            if (defence === 4){
+              defended = true;
+            }
+            imellia.getDamaged(boss.dealDamageB());
+            defended = false;
+            sbAmount ++;
           }
-          imellia.getDamaged(boss.dealDamageB());
-          defended = false;
 
-          if (defence === 1){
-            defended = true;
+          if (ace.status() > 0){
+            if (defence === 1){
+              defended = true;
+            }
+            ace.getDamaged(boss.dealDamageF());
+            defended = false;
+            sbAmount ++;
           }
-          ace.getDamaged(boss.dealDamageF());
-          defended = false;
+          bChoice = 0;
+          defence = 0;
+          sbAmount = 0;
+          turn = 1;
+          attacking = false;
         }
-
-        bChoice = 0;
-        defence = 0;
-        turn = 1;
-        attacking = false;
       }
       else{
         if (attacking === false){
@@ -1781,6 +1825,7 @@ function draw() {
 
   if (endgame === false){
 
+    print("turn ", turn);
     if (turn > 9){
       secondRound();
     }
