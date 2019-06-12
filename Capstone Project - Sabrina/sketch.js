@@ -162,7 +162,6 @@ class Whisper{
       knife = new Knife(width/5, height/6.5);
       
       if (frameCount - startAttack > 2){
-        this.criticalHit = int(random(1,3));
         this.attackPhase = 2;
       }
       return false;
@@ -174,7 +173,8 @@ class Whisper{
       knife.throw();
       
       if (frameCount - startAttack > 100){
-        this.criticalHit = int(random(1,3));
+        this.criticalHit = int(random(1,4));
+        print(this.criticalHit);
         this.attackPhase = 3;
       }
       return false;
@@ -458,19 +458,24 @@ class Hatch{
         this.yTravel = height/1.6;
       }
 
-      if (this.x < this.xTravel + 4){
-        this.x += 4;
+      if (abs(this.x - this.xTravel) > 4){
+        if (this.x < this.xTravel + 4){
+          this.x += 4;
+        }
+        else{
+          this.x -= 4;
+        }
       }
-      else{
-        this.x -= 4;
+
+      if (abs(this.y - this.yTravel) > 4){
+        if (this.y < this.yTravel + 4){
+          this.y += 4;
+        }
+        else{
+          this.y -= 4;
+        }
       }
-      if (this.y < this.yTravel + 4){
-        this.y += 4;
-      }
-      else{
-        this.y -= 4;
-      }
-  
+
       hatch.display();
 
       if (frameCount - startAttack > 120){
@@ -824,7 +829,6 @@ class Boss{
     whisper.display();
 
     if (this.attackPhase === 1){
-
       if (bChoice === 1){
         if (this.x > width/5){
           this.x -= 4;
@@ -846,7 +850,6 @@ class Boss{
         }
       }
       if (bChoice === 3){
-
         if (defence < 5){
           if (this.x > hatch.getLocation(1)){
             this.x -= 4;
@@ -868,6 +871,7 @@ class Boss{
           }
         }
       }
+
       if (bChoice === 4){
         if (this.x > width/25){
           this.x -= 4;
@@ -1399,7 +1403,7 @@ function firstRound(){
   }
 
   if (turn === 9){
-    bChoice = 2; //int(random(1,4));
+    bChoice = 1; //int(random(1,4));
     if (bChoice === 1){
       bChoice = int(random(1, 6)); //Attack
     }
@@ -1409,6 +1413,8 @@ function firstRound(){
     else{
       bChoice = 7; //Heal
     }
+
+    print(bChoice);
     if (bChoice === 5 && ace.status() < 1){
       bChoice === 4;
     }
@@ -1875,14 +1881,13 @@ function setup() {
 }
 
 function checkEnd(){
-
+  //
 }
 
 function draw() {
 
   if (endgame === false){
 
-    print("turn ", turn);
     if (turn > 9){
       secondRound();
     }
@@ -1892,8 +1897,6 @@ function draw() {
   }
 }
 
-//- Fix Hatch's defend system
 // - Make an endgame function
-// - Create the magic attack for the boss
 // - Boss should not attack a dead person
 // - Return Hatch to original position after defending
