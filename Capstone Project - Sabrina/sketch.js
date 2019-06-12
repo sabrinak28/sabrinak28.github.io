@@ -36,7 +36,7 @@ let menu;
 let knife;
 let bullet;
 let sbArray = [];
-let sbAmount;
+let sbAmount = 5;
 
 let startAttack;
 let attacking = false;
@@ -964,6 +964,9 @@ class Boss{
       for (let i = 0; i <= sbAmount; i++){
         sbArray.push(new ShadowBall(width/2, height/2));
       }
+      for (let c = 0; c < sbArray.length; c++){
+        sbArray[c].resetPos();
+      }
 
       if (frameCount - startAttack > 2){
         this.attackPhase = 2;
@@ -978,7 +981,7 @@ class Boss{
         sbArray[c].cast(c);
       }
 
-      if (frameCount - startAttack > 100){
+      if (frameCount - startAttack > 120){
         this.attackPhase = 3;
       }
       return false;
@@ -986,15 +989,52 @@ class Boss{
     if (this.attackPhase === 3){
       image(bImg[1], this.x, this.y);
       if (defence === 1){
-        fill(255, 0, 0);
+        fill(200);
         text("DEFENDED", width/5, height/6.5 - height/20);
       }
       else{
+        fill(255, 0, 0);
         text("-" + this.sDamage1, width/5, height/6.5);
+      }
+
+      if (defence === 2){
+        fill(200);
+        text("DEFENDED", width/25, height/4 - height/20);
+      }
+      else{
+        fill(255, 0, 0);
+        text("-" + this.sDamage2, width/25, height/4);
+      }
+
+      if (defence === 3){
+        fill(200);
+        text("DEFENDED", hatch.getLocation(1), hatch.getLocation(2) - height/20);
+      }
+      else{
+        fill(255, 0, 0);
+        text("-" + this.sDamage1, hatch.getLocation(1), hatch.getLocation(1));
+      }
+
+      if (defence === 4){
+        fill(200);
+        text("DEFENDED", width/25, height/2 - height/20);
+      }
+      else{
+        fill(255, 0, 0);
+        text("-" + this.sDamage2, width/25, height/2);
+      }
+
+      if (defence === 5){
+        fill(200);
+        text("DEFENDED", width/5, height/1.6 - height/20);
+      }
+      else{
+        fill(255, 0, 0);
+        text("-" + this.sDamage1, width/5, height/1.6);
       }
     }
 
-    if (frameCount - startAttack > 140){
+    if (frameCount - startAttack > 180){
       this.attackPhase = 1;
       return true;
     }
@@ -1131,57 +1171,81 @@ class ShadowBall{
   constructor(x_, y_){
     this.x = x_;
     this.y = y_;
-    this.speed = 8;
+    this.speed = 6;
     this.movePhase = 1;
   }
   cast(n){
+    
     if (this.movePhase === 1){
-      if (n === 0){
-        if (this.x > width/5){
-          this.x -= this.speed;
-          if (this.y > height/6.5){
-            this.y -= this.speed / 2;
-          }
-          image(sBall, this.x, this.y);
-        } 
+      if (whisper.status() > 0){
+        if (n === 0){
+          if (this.x > width/5){
+            this.x -= this.speed;
+            if (this.y > height/6.5){
+              this.y -= this.speed / 2;
+            }
+            image(sBall, this.x, this.y);
+          } 
+        }
       }
-      if (n === 1){
-        if (this.x > width/25){
-          this.x -= this.speed;
-          if (this.y > height/4){
-            this.y -= this.speed / 2;
-          }
-          image(sBall, this.x, this.y);
-        } 
+      if (quill.status() > 0){
+        if (n === 1){
+          if (this.x > width/25){
+            this.x -= this.speed;
+            if (this.y > height/4){
+              this.y -= this.speed;
+            }
+            image(sBall, this.x, this.y);
+          } 
+        }
       }
-      if (n === 2){
-        if (this.x < width/5){
-          this.x += this.speed;
-          if (this.y > height/2.7){
-            this.y -= this.speed / 2;
+      if (hatch.status() > 0){
+        if (n === 2){
+          if (defence < 5){
+            if (this.x > hatch.getLocation(1)){
+              this.x -= this.speed;
+            }
+            if (this.y > hatch.getLocation(2)){
+              this.y -= this.speed / 2;
+            }
+            image(sBall, this.x, this.y);
           }
-          image(sBall, this.x, this.y);
-        } 
+          else{
+            if (this.x > hatch.getLocation(1)){
+              this.x -= this.speed;
+            }
+            if (this.y < hatch.getLocation(2)){
+              this.y += this.speed / 2;
+            }
+            image(sBall, this.x, this.y);
+          }
+        }
       }
-      if (n === 3){
-        if (this.x < width/25){
-          this.x += this.speed;
-          if (this.y > height/2){
-            this.y -= this.speed / 2;
-          }
-          image(sBall, this.x, this.y);
-        } 
+      if (imellia.status() > 0){
+        if (n === 3){
+          if (this.x > width/25){
+            this.x -= this.speed;
+            image(sBall, this.x, this.y);
+          } 
+        }
       }
-      if (n === 4){
-        if (this.x < width/5){
-          this.x += this.speed;
-          if (this.y > height/1.6){
-            this.y -= this.speed / 2;
-          }
-          image(sBall, this.x, this.y);
-        } 
+      if (ace.status() > 0){
+        if (n === 4){
+          if (this.x > width/5){
+            this.x -= this.speed;
+            if (this.y < height/1.6){
+              this.y += this.speed / 2;
+            }
+            image(sBall, this.x, this.y);
+          } 
+        }
       }
     }
+  }
+  
+  resetPos(){
+    this.x = width/2;
+    this.y = height/2;
   }
 }
 
@@ -1739,10 +1803,8 @@ function secondRound(){
             if (defence === 1){
               defended = true;
             }
-            print("damage:", boss.dealDamageF());
             whisper.getDamaged(boss.dealDamageF());
-            defended = false;
-            sbAmount ++;  
+            defended = false; 
           }
 
           if (quill.status() > 0){
@@ -1751,7 +1813,6 @@ function secondRound(){
             }
             quill.getDamaged(boss.dealDamageB());
             defended = false;
-            sbAmount ++;
           }
 
           if (hatch.status() > 0){
@@ -1760,7 +1821,6 @@ function secondRound(){
             }
             hatch.getDamaged(boss.dealDamageF());
             defended = false;
-            sbAmount ++;
           }
 
           if (imellia.status() > 0){
@@ -1769,7 +1829,6 @@ function secondRound(){
             }
             imellia.getDamaged(boss.dealDamageB());
             defended = false;
-            sbAmount ++;
           }
 
           if (ace.status() > 0){
@@ -1778,11 +1837,9 @@ function secondRound(){
             }
             ace.getDamaged(boss.dealDamageF());
             defended = false;
-            sbAmount ++;
           }
           bChoice = 0;
           defence = 0;
-          sbAmount = 0;
           turn = 1;
           attacking = false;
         }
