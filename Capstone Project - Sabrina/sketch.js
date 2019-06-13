@@ -85,7 +85,7 @@ class Whisper{
     this.x = x_;
     this.sDamage = 100;
     this.aDamage = 125;
-    this.health = 200;
+    this.health = 0;
     this.alive = true;
     this.attackPhase = 1;
     this.criticalHit = 0;
@@ -241,7 +241,7 @@ class Quill{
     this.x = x_;
     this.sDamage = 100;
     this.sHeal = 75;
-    this.health = 175;
+    this.health = 0; //175
     this.alive = true;
     this.attackPhase = 1;
   }
@@ -512,8 +512,8 @@ class Hatch{
   getHealed(hp){
     if (this.alive){
       this.health = this.health + hp;
-      if (this.health > 200){
-        this.health = 200;
+      if (this.health > 300){
+        this.health = 300;
       }
     }
   }
@@ -1364,7 +1364,7 @@ function firstRound(){
   }
 
   if (turn === 9){
-    bChoice = 3; //int(random(1,3));
+    bChoice = int(random(1,3));
     if (bChoice === 1){
       bChoice = int(random(1, 6)); //Attack
     }
@@ -1376,24 +1376,37 @@ function firstRound(){
     }
 
     print(bChoice);
-    if (bChoice === 5 && ace.status() < 1){
-      bChoice === 4;
-    }
-    if (bChoice === 4 && imellia.status() < 1){
-      bChoice === 3;
-    }
-    if (bChoice === 3 && hatch.status() < 1){
-      bChoice === 2;
-    }
-    if (bChoice === 2 && quill.status() < 1){
-      bChoice === 1;
-    }
-    if (bChoice === 1 && whisper.status() < 1){
-      if (ace.status() > 1){
-        bChoice === 5;
+    while (true){
+      if (bChoice === 5 && ace.status() > 0){
+        break;
       }
+
+
+      bChoice = int(random(1, 6)); //Attack
     }
-    print(bChoice);
+    // if (bChoice === 5 && ace.status() < 1){
+    //   print("ace's dead");
+    //   bChoice = 4;
+    // }
+    // if (bChoice === 4 && imellia.status() < 1){
+    //   bChoice = 3;
+    //   print("i's dead");
+    // }
+    // if (bChoice === 3 && hatch.status() < 1){
+    //   bChoice = 2;
+    //   print("h's dead");
+    // }
+    // if (bChoice === 2 && quill.status() < 1){
+    //   bChoice = 1;
+    //   print("q's dead");
+    // }
+    // if (bChoice === 1 && whisper.status() < 1){
+    //   if (ace.status() < 1){
+    //     bChoice = 5;
+    //     print("w's dead");
+    //   }
+    // }
+    print(bChoice, ace.status(), imellia.status(), hatch.status(), quill.status(), whisper.status());
     turn++;    
   } 
 }
@@ -1664,17 +1677,18 @@ function secondRound(){
         if (imellia.heal()){
           if (iChoice === 3){
             whisper.getHealed(imellia.healSomeone());
+            print(whisper.status());
           }
-          if (qChoice === 4){
+          if (iChoice === 4){
             quill.getHealed(imellia.healSomeone());
           }
-          if (qChoice === 5){
+          if (iChoice === 5){
             hatch.getHealed(imellia.healSomeone());
           }
-          if (qChoice === 5){
+          if (iChoice === 5){
             imellia.getHealed(imellia.healSomeone());
           }
-          if (qChoice === 6){
+          if (iChoice === 6){
             ace.getHealed(imellia.healSomeone());
           }
           iChoice = 0;
@@ -1851,6 +1865,10 @@ function checkEnd(){
   }
 }
 
+function endScreen(){
+
+}
+
 function draw() {
 
   if (endgame === false){
@@ -1861,9 +1879,12 @@ function draw() {
     else{
       firstRound();
     }
+    checkEnd();
+  }
+  else{
+    //
   }
 }
 
 // - Make an endgame function
 // - Boss should not attack a dead person
-// - Return Hatch to original position after defending
