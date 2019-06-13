@@ -1045,36 +1045,6 @@ class Boss{
     return false;
   }
 
-  heal(){
-    background(backgroundImg);
-    whisper.display();
-    hatch.display();
-    imellia.display();
-    ace.display();
-    quill.display();
-
-    if (this.attackPhase === 1){
-      image(bImg[1], this.x, this.y);
-      if (frameCount - startAttack > 60){
-        this.attackPhase = 2;
-      }
-      return false;
-    }
-    if (this.attackPhase === 2){
-      image(bImg[1], this.x, this.y);
-      fill(0, 255, 255);
-      text("+" + this.sHeal, this.x, this.y);
-    }
-    if (frameCount - startAttack > 160){
-      this.attackPhase = 1;
-      return true;
-    }
-  }
-
-  healYourself(){
-    return this.sHeal();
-  }
-
   dealDamageB(){
     if (bChoice > 0 && bChoice < 6){
       if (defended){
@@ -1109,15 +1079,6 @@ class Boss{
       }
       else{
         return this.sDamage1;
-      }
-    }
-  }
-
-  getHealed(hp){
-    if (this.alive){
-      this.health = this.health + hp;
-      if (this.health > 2500){
-        this.health = 2500;
       }
     }
   }
@@ -1403,7 +1364,7 @@ function firstRound(){
   }
 
   if (turn === 9){
-    bChoice = 1; //int(random(1,4));
+    bChoice = 3; //int(random(1,3));
     if (bChoice === 1){
       bChoice = int(random(1, 6)); //Attack
     }
@@ -1855,11 +1816,12 @@ function secondRound(){
           attacking = true;
           startAttack = frameCount;
         }
-        boss.getHealed(boss.healYourself());
+        if (boss.heal()){
+          boss.getHealed(boss.healYourself());
+        }
         bChoice = 0;
         defence = 0;
         turn = 1;
-        defended = false;
         attacking = false;
 
       }
@@ -1881,7 +1843,12 @@ function setup() {
 }
 
 function checkEnd(){
-  //
+  if (whisper.status() < 1 && quill.status() < 1 && hatch.status() < 1 && imellia.status() < 1 && ace.status() < 1 || boss.status() < 1){
+    endgame = true;
+  }
+  else{
+    endgame = false;
+  }
 }
 
 function draw() {
