@@ -10,6 +10,7 @@ let kImg;
 let buImg;
 let sBall;
 
+let music = []; 
 let wImg = [];
 let qImg = [];
 let hImg = [];
@@ -42,6 +43,7 @@ let startAttack;
 let attacking = false;
 let defence = 0;
 let defended = false;
+let musicChange = true;
 
 let turn = 1;
 let endgame = false;
@@ -73,8 +75,12 @@ function preload(){
     bImg.push(loadImage("assets/boss" + i + ".png"));
   }
 
-  for (let i = 1; i < 10; i++){
+  for (let i = 1; i < 12; i++){
     menus.push(loadImage("assets/menu" + i + ".jpg"));
+  }
+
+  for (let i = 1; i < 3; i++){
+    music.push(loadSound("assets/music" + i + ".mp3"));
   }
 }
 
@@ -85,7 +91,7 @@ class Whisper{
     this.x = x_;
     this.sDamage = 100;
     this.aDamage = 125;
-    this.health = 0;
+    this.health = 200;
     this.alive = true;
     this.attackPhase = 1;
     this.criticalHit = 0;
@@ -197,6 +203,28 @@ class Whisper{
     }
   }
 
+  celebrate(){
+    if (whisper.status() > 0){
+      if (this.attackPhase === 1){
+        if (this.y > height/20){
+          this.y -= 5;
+        }
+        if (this.y <= height/20){
+          this.attackPhase = 2;
+        }
+      }
+      if (this.attackPhase === 2){
+        if (this.y < height/6.5){
+        this.y += 5;
+        }
+        if (this.y >= height/6.5){
+          this.attackPhase = 1;
+        }
+      }
+    }
+    whisper.display();
+  }
+
   dealDamage(){
     if (wChoice === 1){
       return this.aDamage;
@@ -241,7 +269,7 @@ class Quill{
     this.x = x_;
     this.sDamage = 100;
     this.sHeal = 75;
-    this.health = 0; //175
+    this.health = 175; //175
     this.alive = true;
     this.attackPhase = 1;
   }
@@ -321,6 +349,28 @@ class Quill{
       this.attackPhase = 1;
       return true;
     }
+  }
+
+  celebrate(){
+    if (quill.status() > 0){
+      if (this.attackPhase === 1){
+        if (this.y > height/7){
+          this.y -= 5;
+        }
+        if (this.y <= height/7){
+          this.attackPhase = 2;
+        }
+      }
+      if (this.attackPhase === 2){
+        if (this.y < height/4){
+        this.y += 5;
+        }
+        if (this.y >= height/4){
+          this.attackPhase = 1;
+        }
+      }
+    }
+    quill.display();
   }
 
   dealDamage(){
@@ -492,6 +542,28 @@ class Hatch{
     }
   }
 
+  celebrate(){
+    if (hatch.status() > 0){
+      if (this.attackPhase === 1){
+        if (this.y > height/3.2){
+          this.y -= 5;
+        }
+        if (this.y <= height/3.2){
+          this.attackPhase = 2;
+        }
+      }
+      if (this.attackPhase === 2){
+        if (this.y < height/2.7){
+        this.y += 5;
+        }
+        if (this.y >= height/2.7){
+          this.attackPhase = 1;
+        }
+      }
+    }
+    hatch.display();
+  }
+
   getLocation(c){
     if (c === 1){
       return this.x;
@@ -613,7 +685,28 @@ class Imellia{
       this.attackPhase = 1;
       return true;
     }
+  }
 
+  celebrate(){
+    if (imellia.status() > 0){
+      if (this.attackPhase === 1){
+        if (this.y > height/2.5){
+          this.y -= 5;
+        }
+        if (this.y <= height/2.5){
+          this.attackPhase = 2;
+        }
+      }
+      if (this.attackPhase === 2){
+        if (this.y < height/2){
+        this.y += 5;
+        }
+        if (this.y >= height/2){
+          this.attackPhase = 1;
+        }
+      }
+    }
+    imellia.display();
   }
 
   dealDamage(){
@@ -761,6 +854,28 @@ class Ace{
       this.attackPhase = 1;
       return true;
     }
+  }
+
+  celebrate(){
+    if (ace.status() > 0){
+      if (this.attackPhase === 1){
+        if (this.y > height/1.8){
+          this.y -= 5;
+        }
+        if (this.y <= height/1.8){
+          this.attackPhase = 2;
+        }
+      }
+      if (this.attackPhase === 2){
+        if (this.y < height/1.6){
+        this.y += 5;
+        }
+        if (this.y >= height/1.6){
+          this.attackPhase = 1;
+        }
+      }
+    }
+    ace.display();
   }
 
   dealDamage(){
@@ -992,49 +1107,60 @@ class Boss{
     }
     if (this.attackPhase === 3){
       image(bImg[1], this.x, this.y);
-      if (defence === 1){
-        fill(200);
-        text("DEFENDED", width/5, height/6.5 - height/20);
-      }
-      else{
-        fill(255, 0, 0);
-        text("-" + this.sDamage1, width/5, height/6.5);
+
+      if (whisper.status() > 0){
+        if (defence === 1){
+          fill(200);
+          text("DEFENDED", width/5, height/6.5 - height/20);
+        }
+        else{
+          fill(255, 0, 0);
+          text("-" + this.sDamage1, width/5, height/6.5);
+        }
       }
 
-      if (defence === 2){
-        fill(200);
-        text("DEFENDED", width/25, height/4 - height/20);
-      }
-      else{
-        fill(255, 0, 0);
-        text("-" + this.sDamage2, width/25, height/4);
-      }
-
-      if (defence === 3){
-        fill(200);
-        text("DEFENDED", hatch.getLocation(1), hatch.getLocation(2) - height/20);
-      }
-      else{
-        fill(255, 0, 0);
-        text("-" + this.sDamage1, hatch.getLocation(1), hatch.getLocation(1));
+      if (quill.status() > 0){
+        if (defence === 2){
+          fill(200);
+          text("DEFENDED", width/25, height/4 - height/20);
+        }
+        else{
+          fill(255, 0, 0);
+          text("-" + this.sDamage2, width/25, height/4);
+        }
       }
 
-      if (defence === 4){
-        fill(200);
-        text("DEFENDED", width/25, height/2 - height/20);
-      }
-      else{
-        fill(255, 0, 0);
-        text("-" + this.sDamage2, width/25, height/2);
+      if (hatch.status() > 0){
+        if (defence === 3){
+          fill(200);
+          text("DEFENDED", hatch.getLocation(1), hatch.getLocation(2) - height/20);
+        }
+        else{
+          fill(255, 0, 0);
+          text("-" + this.sDamage1, hatch.getLocation(1), hatch.getLocation(1));
+        }
       }
 
-      if (defence === 5){
-        fill(200);
-        text("DEFENDED", width/5, height/1.6 - height/20);
+      if (imellia.status() > 0){
+        if (defence === 4){
+          fill(200);
+          text("DEFENDED", width/25, height/2 - height/20);
+        }
+        else{
+          fill(255, 0, 0);
+          text("-" + this.sDamage2, width/25, height/2);
+        }
       }
-      else{
-        fill(255, 0, 0);
-        text("-" + this.sDamage1, width/5, height/1.6);
+
+      if (ace.status() > 0){
+        if (defence === 5){
+          fill(200);
+          text("DEFENDED", width/5, height/1.6 - height/20);
+        }
+        else{
+          fill(255, 0, 0);
+          text("-" + this.sDamage1, width/5, height/1.6);
+        }
       }
     }
 
@@ -1043,6 +1169,28 @@ class Boss{
       return true;
     }
     return false;
+  }
+
+  celebrate(){
+    if (this.attackPhase === 1){
+      if (this.y > height/2.5){
+        this.y -= 5;
+      }
+      if (this.y <= height/2.5){
+        this.attackPhase = 2;
+      }
+    }
+    if (this.attackPhase === 2){
+      if (this.y < height/2){
+      this.y += 5;
+      }
+      if (this.y >= height/2){
+        this.attackPhase = 1;
+      }
+    }
+    boss.display();
+    fill(255, 0, 0);
+    text("Ha Ha!", this.x, this.y);
   }
 
   dealDamageB(){
@@ -1156,7 +1304,7 @@ class ShadowBall{
       if (quill.status() > 0){
         if (n === 1){
           if (this.x > width/25){
-            this.x -= this.speed;
+            this.x -= this.speed * 1.5;
             if (this.y > height/4){
               this.y -= this.speed;
             }
@@ -1189,7 +1337,7 @@ class ShadowBall{
       if (imellia.status() > 0){
         if (n === 3){
           if (this.x > width/25){
-            this.x -= this.speed;
+            this.x -= this.speed * 1.5;
             image(sBall, this.x, this.y);
           } 
         }
@@ -1366,7 +1514,25 @@ function firstRound(){
   if (turn === 9){
     bChoice = int(random(1,3));
     if (bChoice === 1){
-      bChoice = int(random(1, 6)); //Attack
+      bChoice = int(random(1, 6));
+      while (true){
+        if (bChoice === 5 && ace.status() > 0){
+          break;
+        }
+        if (bChoice === 4 && imellia.status() > 0){
+          break;
+        }
+        if (bChoice === 3 && hatch.status() > 0){
+          break;
+        }
+        if (bChoice === 2 && quill.status() > 0){
+          break;
+        }
+        if (bChoice === 1 && whisper.status() > 0){
+          break;
+        }
+        bChoice = int(random(1, 6));
+      }
     }
     else if (bChoice === 2){
       bChoice = 6; //Spell
@@ -1375,37 +1541,6 @@ function firstRound(){
       bChoice = 7; //Heal
     }
 
-    print(bChoice);
-    while (true){
-      if (bChoice === 5 && ace.status() > 0){
-        break;
-      }
-
-
-      bChoice = int(random(1, 6)); //Attack
-    }
-    // if (bChoice === 5 && ace.status() < 1){
-    //   print("ace's dead");
-    //   bChoice = 4;
-    // }
-    // if (bChoice === 4 && imellia.status() < 1){
-    //   bChoice = 3;
-    //   print("i's dead");
-    // }
-    // if (bChoice === 3 && hatch.status() < 1){
-    //   bChoice = 2;
-    //   print("h's dead");
-    // }
-    // if (bChoice === 2 && quill.status() < 1){
-    //   bChoice = 1;
-    //   print("q's dead");
-    // }
-    // if (bChoice === 1 && whisper.status() < 1){
-    //   if (ace.status() < 1){
-    //     bChoice = 5;
-    //     print("w's dead");
-    //   }
-    // }
     print(bChoice, ace.status(), imellia.status(), hatch.status(), quill.status(), whisper.status());
     turn++;    
   } 
@@ -1685,10 +1820,10 @@ function secondRound(){
           if (iChoice === 5){
             hatch.getHealed(imellia.healSomeone());
           }
-          if (iChoice === 5){
+          if (iChoice === 6){
             imellia.getHealed(imellia.healSomeone());
           }
-          if (iChoice === 6){
+          if (iChoice === 7){
             ace.getHealed(imellia.healSomeone());
           }
           iChoice = 0;
@@ -1845,6 +1980,8 @@ function secondRound(){
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  music[0].setVolume(0.1);
+  music[0].loop();
 
   whisper = new Whisper(width/5, height/6.5);
   quill = new Quill(width/25, height/4);
@@ -1856,6 +1993,7 @@ function setup() {
 
 }
 
+
 function checkEnd(){
   if (whisper.status() < 1 && quill.status() < 1 && hatch.status() < 1 && imellia.status() < 1 && ace.status() < 1 || boss.status() < 1){
     endgame = true;
@@ -1866,7 +2004,40 @@ function checkEnd(){
 }
 
 function endScreen(){
+  if (musicChange){
+    music[0].stop();
+    music[1].setVolume(0.1);
+    music[1].play();
+    musicChange = false;
+  }
+  
+  
 
+  //Lose Game
+  if (whisper.status() < 1 && quill.status() < 1 && hatch.status() < 1 && imellia.status() < 1 && ace.status() < 1){
+    background(backgroundImg);
+    whisper.display();
+    quill.display();
+    hatch.display();
+    imellia.display();
+    ace.display();
+
+    boss.celebrate();
+
+    menu.display(9);
+  }
+  else{
+    background(backgroundImg);
+    whisper.celebrate();
+    quill.celebrate();
+    hatch.celebrate();
+    imellia.celebrate();
+    ace.celebrate();
+
+    boss.display();
+
+    menu.display(10);
+  }
 }
 
 function draw() {
@@ -1882,9 +2053,6 @@ function draw() {
     checkEnd();
   }
   else{
-    //
+    endScreen();
   }
 }
-
-// - Make an endgame function
-// - Boss should not attack a dead person
