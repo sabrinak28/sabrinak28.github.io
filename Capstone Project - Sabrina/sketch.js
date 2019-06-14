@@ -215,7 +215,7 @@ class Whisper{
       }
       if (this.attackPhase === 2){
         if (this.y < height/6.5){
-        this.y += 5;
+          this.y += 5;
         }
         if (this.y >= height/6.5){
           this.attackPhase = 1;
@@ -363,7 +363,7 @@ class Quill{
       }
       if (this.attackPhase === 2){
         if (this.y < height/4){
-        this.y += 5;
+          this.y += 5;
         }
         if (this.y >= height/4){
           this.attackPhase = 1;
@@ -554,7 +554,7 @@ class Hatch{
       }
       if (this.attackPhase === 2){
         if (this.y < height/2.7){
-        this.y += 5;
+          this.y += 5;
         }
         if (this.y >= height/2.7){
           this.attackPhase = 1;
@@ -699,7 +699,7 @@ class Imellia{
       }
       if (this.attackPhase === 2){
         if (this.y < height/2){
-        this.y += 5;
+          this.y += 5;
         }
         if (this.y >= height/2){
           this.attackPhase = 1;
@@ -868,7 +868,7 @@ class Ace{
       }
       if (this.attackPhase === 2){
         if (this.y < height/1.6){
-        this.y += 5;
+          this.y += 5;
         }
         if (this.y >= height/1.6){
           this.attackPhase = 1;
@@ -1182,7 +1182,7 @@ class Boss{
     }
     if (this.attackPhase === 2){
       if (this.y < height/2){
-      this.y += 5;
+        this.y += 5;
       }
       if (this.y >= height/2){
         this.attackPhase = 1;
